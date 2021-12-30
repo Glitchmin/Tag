@@ -50,8 +50,24 @@ class Graph:
             self.outgoing_edges_dict.get(edge[0]).remove((edge[1], edge[2]))
             self.ingoing_edges_dict.get(edge[1]).remove((edge[0], edge[2]))
 
-    def validate(self, left_graph: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
-        pass
+    def validate(self, left: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
+        self_to_lhs_mapping = {v: k for k, v in lhs_to_self_mapping.items()}
+        for lhs_ID, self_ID in lhs_to_self_mapping.items():
+            if self.labels_dict.get(self_ID) != left.labels_dict.get(lhs_ID):
+                return False
+            matched_edges = 0
+            for self_edge in self.outgoing_edges_dict.get(self_ID):
+                if not self_to_lhs_mapping.keys().__contains__(self_edge[0]):
+                    return False
+                left_edge = left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))
+                if left_edge[1] != self_edge[1] or left_edge[0] != self_to_lhs_mapping.get(self_edge[0]):
+                    return False
+                matched_edges += 1
+            if matched_edges != left.outgoing_edges_dict.get(lhs_ID):
+                return False
+
+
+        return True
 
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
         """lhs - left hand side of the production"""
