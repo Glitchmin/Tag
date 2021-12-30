@@ -1,4 +1,5 @@
-from typing import List, Tuple
+from __future__ import annotations
+
 
 from graph import *
 from new_edges_definition import *

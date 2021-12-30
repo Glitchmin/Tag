@@ -56,16 +56,14 @@ class Graph:
             if self.labels_dict.get(self_ID) != left.labels_dict.get(lhs_ID):
                 return False
             matched_edges = 0
-            for self_edge in self.outgoing_edges_dict.get(self_ID):
+            for self_edge, left_edge in zip(self.outgoing_edges_dict.get(self_ID), left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))):
                 if not self_to_lhs_mapping.keys().__contains__(self_edge[0]):
                     return False
-                left_edge = left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))
                 if left_edge[1] != self_edge[1] or left_edge[0] != self_to_lhs_mapping.get(self_edge[0]):
                     return False
                 matched_edges += 1
-            if matched_edges != left.outgoing_edges_dict.get(lhs_ID):
+            if matched_edges != len(left.outgoing_edges_dict.get(lhs_ID)):
                 return False
-
 
         return True
 
