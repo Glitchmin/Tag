@@ -28,7 +28,7 @@ class Graph:
         self.ingoing_edges_dict.update({self.next_v_ID: set({})})
         self.add_edges(edges_list)
         self.next_v_ID += 1
-        return self.next_v_ID-1
+        return self.next_v_ID - 1
 
     def remove_vertex(self, vertex_id: int):
         if self.labels_dict.__contains__(vertex_id):
@@ -44,13 +44,22 @@ class Graph:
 
     def add_edges(self, edges_list: List[Tuple[int, int, str]]):
         for e in edges_list:
-            self.outgoing_edges_dict.get(e[0]).add((e[1], e[2]))
-            self.ingoing_edges_dict.get(e[1]).add((e[0], e[2]))
+            self.add_edge(e)
+
+    def add_edge(self, edge: Tuple[int, int, str]):
+        self.outgoing_edges_dict.get(edge[0]).add((edge[1], edge[2]))
+        self.ingoing_edges_dict.get(edge[1]).add((edge[0], edge[2]))
 
     def remove_edges(self, edges_list: List[Tuple[int, int, str]]):
         for edge in edges_list:
             self.outgoing_edges_dict.get(edge[0]).remove((edge[1], edge[2]))
             self.ingoing_edges_dict.get(edge[1]).remove((edge[0], edge[2]))
+
+    def get_edges(self) -> List[Tuple[int, int, str]]:
+        edges: List[Tuple[int, int, str]] = []
+        for (vertex, out_edges) in self.outgoing_edges_dict.items():
+            for (dest_vertex, label) in out_edges.items():
+                edges.append((vertex, dest_vertex, label))
 
     def validate(self, left: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
         self_to_lhs_mapping = {v: k for k, v in lhs_to_self_mapping.items()}
@@ -58,7 +67,8 @@ class Graph:
             if self.labels_dict.get(self_ID) != left.labels_dict.get(lhs_ID):
                 return False
             matched_edges = 0
-            for self_edge, left_edge in zip(self.outgoing_edges_dict.get(self_ID), left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))):
+            for self_edge, left_edge in zip(self.outgoing_edges_dict.get(self_ID),
+                                            left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))):
                 if not self_to_lhs_mapping.keys().__contains__(self_edge[0]):
                     return False
                 if left_edge[1] != self_edge[1] or left_edge[0] != self_to_lhs_mapping.get(self_edge[0]):
@@ -80,7 +90,6 @@ class Graph:
                     connecting_edges.append((edge[0], vertex, edge[1]))
         return connecting_edges
 
-
     def remove_subgraph(self, indexes: List[int]):
         for index in indexes:
             self.remove_vertex(index)
@@ -91,7 +100,9 @@ class Graph:
         for (other_index, other_label) in other.labels_dict.items():
             other_to_self_mapping[other_index] = self.add_vertex(other_label)
 
-        #add edges mapped via other_to_self
+        self.add_edges(list(map(lambda e: (other_to_self_mapping[e[0]],
+                                           other_to_self_mapping[e[1]],
+                                           e[2]), other.get_edges())))
 
         return other_to_self_mapping
 
@@ -105,7 +116,8 @@ class Graph:
             raise ValueError("invalid lhs_to_self_mapping - given subgraph of the start graph not\
                               isomorphic to the left graph")
 
-        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(set(lhs_to_self_mapping.values()))
+        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(
+            set(lhs_to_self_mapping.values()))
 
         self.remove_subgraph(list(lhs_to_self_mapping.values()))
 
@@ -116,7 +128,7 @@ class Graph:
 
     def print(self):
         for vertex in self.labels_dict:
-            print("vertexID: ", vertex, " vertexLabel",  self.labels_dict.get(vertex))
+            print("vertexID: ", vertex, " vertexLabel", self.labels_dict.get(vertex))
             for edge in self.outgoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
