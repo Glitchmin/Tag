@@ -1,9 +1,13 @@
-from typing import List, Tuple
+from __future__ import annotations
+
+from typing import List, Tuple, Dict
+
+from production import Production
 
 
 class Graph:
     def __init__(self, labels_list: List[str], edges_list: List[Tuple[int, int, str]]):
-        # edges_dict - list of 3 element tuples (vertex_begin, vertex_end, label)
+        """edges_dict - list of 3 element tuples (vertex_begin, vertex_end, label)"""
         self.next_v_ID = 0
 
         self.outgoing_edges_dict = {}
@@ -46,19 +50,20 @@ class Graph:
             self.outgoing_edges_dict.get(edge[0]).remove((edge[1], edge[2]))
             self.ingoing_edges_dict.get(edge[1]).remove((edge[0], edge[2]))
 
-    def to_string(self):
+    def validate(self, left_graph: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
+        pass
+
+    def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
+        """lhs - left hand side of the production"""
+        if not self.validate(production.left_graph, lhs_to_self_mapping):
+            raise ValueError("invalid lhs_to_self_mapping - given subgraph of the start graph not isomorphic to the left graph")
+
+    def print(self):
         for vertex in self.labels_dict:
-            print("vertexID: ",vertex, " vertexLabel",  self.labels_dict.get(vertex))
+            print("vertexID: ", vertex, " vertexLabel",  self.labels_dict.get(vertex))
             for edge in self.outgoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
             for edge in self.ingoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
-
-
-g = Graph(['A', 'G', 'H'], [(0,1,"asd"), (1,2,"sdf")])
-g.add_vertex("U")
-g.add_edges([(3, 2, "dfg")])
-g.remove_vertex(3)
-g.to_string()
