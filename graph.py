@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Set
 
+from new_edges_definition import NewEdgesDefinition
 from production import Production
 
 
@@ -10,16 +11,16 @@ class Graph:
         """edges_dict - list of 3 element tuples (vertex_begin, vertex_end, label)"""
         self.next_v_ID = 0
 
-        self.outgoing_edges_dict = {}
-        self.ingoing_edges_dict = {}
+        self.outgoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
+        self.ingoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
 
-        self.labels_dict = {}
+        self.labels_dict: Dict[int, str] = {}
         for label in labels_list:
             self.add_vertex(label)
 
         self.add_edges(edges_list)
 
-    def add_vertex(self, label: str, edges_list=None):
+    def add_vertex(self, label: str, edges_list=None) -> int:
         if edges_list is None:
             edges_list = []
         self.labels_dict.update({self.next_v_ID: label})
@@ -27,6 +28,7 @@ class Graph:
         self.ingoing_edges_dict.update({self.next_v_ID: set({})})
         self.add_edges(edges_list)
         self.next_v_ID += 1
+        return self.next_v_ID-1
 
     def remove_vertex(self, vertex_id: int):
         if self.labels_dict.__contains__(vertex_id):
@@ -67,10 +69,38 @@ class Graph:
 
         return True
 
+    def get_edges_connecting_subgraph(self, indexes: List[int]) -> List[Tuple[int, int, str]]:
+        pass
+
+    def remove_subgraph(self, indexes: List[int]):
+        for index in indexes:
+            self.remove_vertex(index)
+
+    def merge(self, other: Graph):
+        # next_index = self.next_v_ID
+        other_to_self_mapping: Dict[int, int] = {}
+        for (other_index, other_label) in other.labels_dict.items():
+            other_to_self_mapping[other_index] = self.add_vertex(other_label)
+
+        #add edges mapped via other_to_self
+
+    def create_new_edges(self, new_edges_def: NewEdgesDefinition, removed_edges:List[Tuple[int, int, str]]):
+        pass
+
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
         """lhs - left hand side of the production"""
         if not self.validate(production.left_graph, lhs_to_self_mapping):
-            raise ValueError("invalid lhs_to_self_mapping - given subgraph of the start graph not isomorphic to the left graph")
+            raise ValueError("invalid lhs_to_self_mapping - given subgraph of the start graph not\
+                              isomorphic to the left graph")
+
+        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(list(lhs_to_self_mapping.values()))
+
+        self.remove_subgraph(list(lhs_to_self_mapping.values()))
+
+        self.merge(production.right_graph)
+
+        for new_edges_def in production.new_edges_defs:
+            self.create_new_edges(new_edges_def, removed_edges)
 
     def print(self):
         for vertex in self.labels_dict:
