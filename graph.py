@@ -85,7 +85,7 @@ class Graph:
         for index in indexes:
             self.remove_vertex(index)
 
-    def merge(self, other: Graph):
+    def merge(self, other: Graph) -> Dict[int, int]:
         # next_index = self.next_v_ID
         other_to_self_mapping: Dict[int, int] = {}
         for (other_index, other_label) in other.labels_dict.items():
@@ -93,7 +93,10 @@ class Graph:
 
         #add edges mapped via other_to_self
 
-    def create_new_edges(self, new_edges_def: NewEdgesDefinition, removed_edges:List[Tuple[int, int, str]]):
+        return other_to_self_mapping
+
+    def create_new_edges(self, new_edges_def: NewEdgesDefinition, removed_edges: List[Tuple[int, int, str]],
+                         rhs_to_self_mapping: Dict[int, int]):
         pass
 
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
@@ -106,10 +109,10 @@ class Graph:
 
         self.remove_subgraph(list(lhs_to_self_mapping.values()))
 
-        self.merge(production.right_graph)
+        rhs_to_self_mapping = self.merge(production.right_graph)
 
         for new_edges_def in production.new_edges_defs:
-            self.create_new_edges(new_edges_def, removed_edges)
+            self.create_new_edges(new_edges_def, removed_edges, rhs_to_self_mapping)
 
     def print(self):
         for vertex in self.labels_dict:
