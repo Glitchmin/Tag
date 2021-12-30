@@ -46,7 +46,7 @@ class Graph:
             self.outgoing_edges_dict.get(edge[0]).remove((edge[1], edge[2]))
             self.ingoing_edges_dict.get(edge[1]).remove((edge[0], edge[2]))
 
-    def to_string(self):
+    def print(self):
         for vertex in self.labels_dict:
             print("vertexID: ",vertex, " vertexLabel",  self.labels_dict.get(vertex))
             for edge in self.outgoing_edges_dict.get(vertex):
@@ -55,10 +55,3 @@ class Graph:
             for edge in self.ingoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
-
-
-g = Graph(['A', 'G', 'H'], [(0,1,"asd"), (1,2,"sdf")])
-g.add_vertex("U")
-g.add_edges([(3, 2, "dfg")])
-g.remove_vertex(3)
-g.to_string()
