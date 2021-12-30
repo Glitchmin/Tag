@@ -57,8 +57,8 @@ class Graph:
             print()
 
 
-g = Graph(['A', 'G', 'H'], [(0,1,"chuj"), (1,2,"kurwa")])
+g = Graph(['A', 'G', 'H'], [(0,1,"asd"), (1,2,"sdf")])
 g.add_vertex("U")
-g.add_edges([(3, 2, "cycki")])
+g.add_edges([(3, 2, "dfg")])
 g.remove_vertex(3)
 g.to_string()
