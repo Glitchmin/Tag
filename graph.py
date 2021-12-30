@@ -69,8 +69,17 @@ class Graph:
 
         return True
 
-    def get_edges_connecting_subgraph(self, indexes: List[int]) -> List[Tuple[int, int, str]]:
-        pass
+    def get_edges_connecting_subgraph(self, indexes: Set[int]) -> List[Tuple[int, int, str]]:
+        connecting_edges = []
+        for vertex in indexes:
+            for edge in self.outgoing_edges_dict.get(vertex):
+                if edge[0] not in indexes:
+                    connecting_edges.append((vertex, edge[0], edge[1]))
+            for edge in self.ingoing_edges_dict.get(vertex):
+                if edge[0] not in indexes:
+                    connecting_edges.append((edge[0], vertex, edge[1]))
+        return connecting_edges
+
 
     def remove_subgraph(self, indexes: List[int]):
         for index in indexes:
@@ -93,7 +102,7 @@ class Graph:
             raise ValueError("invalid lhs_to_self_mapping - given subgraph of the start graph not\
                               isomorphic to the left graph")
 
-        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(list(lhs_to_self_mapping.values()))
+        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(set(lhs_to_self_mapping.values()))
 
         self.remove_subgraph(list(lhs_to_self_mapping.values()))
 
