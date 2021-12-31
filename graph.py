@@ -60,6 +60,7 @@ class Graph:
         for (vertex, out_edges) in self.outgoing_edges_dict.items():
             for (dest_vertex, label) in out_edges.items():
                 edges.append((vertex, dest_vertex, label))
+        return edges
 
     def validate(self, left: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
         self_to_lhs_mapping = {v: k for k, v in lhs_to_self_mapping.items()}
@@ -108,7 +109,16 @@ class Graph:
 
     def create_new_edges(self, new_edges_def: NewEdgesDefinition, removed_edges: List[Tuple[int, int, str]],
                          rhs_to_self_mapping: Dict[int, int]):
-        pass
+        for removed_edge in removed_edges:
+            if removed_edge[2] == new_edges_def.label:
+                """if mapping.values doesn't contain a vertex form removed it means it wasn't part of a subgraph,
+                (doesn't work opposite way)"""
+                if new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[1]):
+                    for rhs_vertex in new_edges_def.rhs_vertices:
+                        self.add_edge((rhs_to_self_mapping.get(rhs_vertex), removed_edge[1], new_edges_def.label))
+                if not new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[0]):
+                    for rhs_vertex in new_edges_def.rhs_vertices:
+                        self.add_edge((removed_edge[0], rhs_to_self_mapping.get(rhs_vertex), new_edges_def.label))
 
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
         """lhs - left hand side of the production"""
