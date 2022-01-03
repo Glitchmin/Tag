@@ -58,7 +58,7 @@ class Graph:
     def get_edges(self) -> List[Tuple[int, int, str]]:
         edges: List[Tuple[int, int, str]] = []
         for (vertex, out_edges) in self.outgoing_edges_dict.items():
-            for (dest_vertex, label) in out_edges.items():
+            for (dest_vertex, label) in out_edges:
                 edges.append((vertex, dest_vertex, label))
         return edges
 
