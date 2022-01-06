@@ -145,3 +145,9 @@ class Graph:
             for edge in self.ingoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
+
+    def clear(self):
+        self.next_v_ID = 0
+        self.outgoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
+        self.ingoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
+        self.labels_dict: Dict[int, str] = {}
