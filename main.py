@@ -9,9 +9,9 @@ def input_graph() -> Graph:
     return g
 
 
-def terminal_input():
-    graph = Graph(['A'], [(0, 0, "asd")])
-    graph.clear()
+def graph_terminal_input():
+    input_graph = Graph(['A'], [(0, 0, "asd")])
+    input_graph.clear()
     vertex_quantity = "not digit"
     while not vertex_quantity.isdigit() or (vertex_quantity.isdigit() and int(vertex_quantity) == 0):
         vertex_quantity = input("give a quantity of vertexes (vertexes are indexed from 0): ")
@@ -20,7 +20,7 @@ def terminal_input():
     vertex_quantity = int(vertex_quantity)
 
     for i in range(vertex_quantity):
-        graph.add_vertex(str(input("vertex %d label: " % i)))
+        input_graph.add_vertex(str(input("vertex %d label: " % i)))
     edge_input = "not end"
     print("input data format: starting_vertex_index ending_vertex_index label\n"
           'to end edges input type "end" ')
@@ -38,12 +38,18 @@ def terminal_input():
             if not edge_input[0].isdigit() or not edge_input[1].isdigit() or int(edge_input[0]) >= vertex_quantity or int(edge_input[1]) >= vertex_quantity:
                 print("edge must begin and end in a existing vertex")
             else:
-                graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
-    return graph
+                input_graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
+    return input_graph
+
+
+def production_terminal_input():
+    input_production = Production(graph_terminal_input(), graph_terminal_input(), [1, 1])
+    return input_production
 
 
 if __name__ == "__main__":
-    graph = input_graph()
-    graph.print()
-    graph = terminal_input()
-    graph.print()
+    # graph = input_graph()
+    # graph.print()
+    p = production_terminal_input()
+    # graph = graph_terminal_input()
+    # graph.print()
