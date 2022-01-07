@@ -1,104 +1,130 @@
-import sys
-
+from tkinter import *
 from graph import *
-import matplotlib.pyplot as plt
-import networkx as nx
+import time
+import pygraphviz as pgv
 from production import Production
 from new_edges_definition import *
-import sys
-import time
-def paintGraph(g):
+from PIL import Image
+import pygame
+
+def paintLabel(g, labels_dict, display_surface, repaint):
+    pygame.init()
+    if not repaint:
+        pygame.display.set_caption('Image')
+        image = pygame.image.load(r'productions.jpg')
+        display_surface.blit(image, (0, 0))
+    background = pygame.Surface((80, 600))
+    background.fill((172, 255, 175))
+    display_surface.blit(background, (520, 0))
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 30)
+    i = 0
+    for key, value in labels_dict.items():
+        textsurface = myfont.render("  " + str(key) + " -> " + value, False, (0, 0, 0))
+        display_surface.blit(textsurface, (520, 50 * i))
+        i += 1
+    pygame.display.update()
+
+
+def paintg(g, name, name2):
     labels_dict = g.labels_dict
- #   labels_dict.update(p.left_graph.labels_dict)
- #   labels_dict.update(p.right_graph.labels_dict)
-    edges: List[Tuple[int, int, str]] = []
+    D = {}
+    edges = []
     edge_labels = {}
+    print(labels_dict)
     for x in g.get_edges():
-        edges.append([labels_dict[x[0]], labels_dict[x[1]]])
-        edge_labels[(labels_dict[x[0]], labels_dict[x[1]])] = x[2]
-    G = nx.Graph()
-    G.add_edges_from(edges)
-    return (G,edge_labels)
-
-def paintMainGraph(g):
-
-    G, edge_labels = paintGraph(g)
-    pos = nx.planar_layout(G)
-    plt.figure()
-    nx.draw(
-        G, pos, edge_color='black', width=1, linewidths=1,
-        node_size=500, node_color='pink', alpha=0.9,
-        labels={node: node for node in G.nodes()}
-
-    )
-    # edge sa dobrze
-    nx.draw_networkx_edge_labels(
-        G, pos,
-        edge_labels=edge_labels,
-        font_color='red'
-    )
-
-    plt.axis('off')
-    plt.show()
+        a = x[0]
+        dicta = {}
+        for y in g.get_edges():
+            if y[0] == a:
+                dicta[y[1]] = y[2]
+            if y[1] == a:
+                dicta[y[0]] = y[2]
+        D[a] = dicta
+    print(g.get_edges())
+    A = pgv.AGraph(D)
+    for i in g.get_edges():
+        edge = A.get_edge(i[0], i[1])
+        edge.attr['label'] = i[2]
+    A.edge_attr.update(forcelabels=True)
+    A.write(name)
+    A.layout(prog="dot")
+    A.draw(name2)
 
 
-
-def paint(g,productions):
-
-    G,edge_labels=paintGraph(g)
+def paint(g, productions, display_surface):
+    paintg(g, "file.dot", "file.png")
+    i = 0
+    new_image = Image.new('RGB', (2300, 2000), (500, 500, 500))
+    name = Image.open('napis.png')
+    labels_dict = g.labels_dict
+    paintLabel(g, labels_dict, display_surface, False)
+    new_image.paste(name, (0, 0))
     for production in productions:
-        Left,edge_labels2=paintGraph(production.left_graph)
-        Right, edge_labels3 = paintGraph(production.left_graph)
-        edge_labels.update(edge_labels2)
-        edge_labels.update(edge_labels3)
-        G.add_nodes_from(Left)
-        G.add_nodes_from(Right)
+        Left = production.right_graph
+        paintg(Left, "left" + str(i) + ".dot", "left" + str(i) + ".png")
+        Right = production.right_graph
+        paintg(Right, "right" + str(i) + ".dot", "right" + str(i) + ".png")
+        imageR = Image.open("right" + str(i) + ".png")
+        imageL = Image.open("left" + str(i) + ".png")
+        imageR = imageR.resize((200, 200))
+        imageL = imageL.resize((200, 200))
+        new_image.paste(imageL, (0, 0 + 240 * i + 120))
+        new_image.paste(imageR, (200, 0 + 240 * i + 120))
+        i += 1
 
-    pos = nx.planar_layout(G)
-    plt.figure()
-    nx.draw(
-        G, pos, edge_color='black', width=1, linewidths=1,
-        node_size=500, node_color='pink', alpha=0.9,
-        labels={node: node for node in G.nodes()}
+    graph = Image.open("file.png")
+    graph = graph.resize((1520, 1800))
+    new_image.paste(graph, (400, 0))
+    new_image = new_image.resize((600, 600))
+    new_image.save(r'productions.jpg')
+    img = pygame.image.load("productions.jpg")
+    display_surface.blit(img, (0, 0))
 
-    )
-    #edge sa dobrze
-    nx.draw_networkx_edge_labels(
-        G, pos,
-        edge_labels=edge_labels,
-        font_color='red'
-    )
 
-    plt.axis('off')
-    plt.show()
+def repaint(g, display_surface):
+    paintg(g, 'file.dot', 'file.png')
+    graph = Image.open('file.png')
+    new = Image.open("productions.jpg")
+    new = new.resize((2300, 2000))
+    graph = graph.resize((1520, 1800))
+    new.paste(graph, (400, 0))
+    new = new.resize((600, 600))
+    new.save(r'update.jpg')
+    i = pygame.image.load('update.jpg')
+    display_surface.blit(i, (0, 0))
+    labels = g.labels_dict
+    paintLabel(g, labels, display_surface, True)
+    pygame.display.set_caption('Image')
+    pygame.display.update()
 
 
 def input_graph() -> Graph:
-    # randomowe dane
     Maing = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
     g = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
     g.add_vertex("U")
     g.add_edges([(3, 2, "dfg")])
-    # g.remove_vertex(3)
-    left_graph=Graph(['f', 'g', 's'], [(0, 1, "asd"), (1, 2, "sdf")])
-    right_graph=Graph(['m', 't', 'r'], [(0, 1, "asd"), (1, 2, "sdf")])
+    left_graph = Graph(['f', 'g', 's'], [(0, 1, "asd"), (1, 2, "sdf")])
+    right_graph = Graph(['m', 't', 'r'], [(0, 1, "asd"), (1, 2, "sdf")])
 
-    a=NewEdgesDefinition(1,"hj",[1,2,3])
-    p=Production(left_graph,right_graph,a)
-    left= Graph(['TAU', 'TEKO', 'TANKO'], [(2, 1, "KRM"), (1, 0, "sdf")])
+    a = NewEdgesDefinition(1, "hj", [1, 2, 3])
+    p = Production(left_graph, right_graph, a)
+    left = Graph(['TAU', 'TEKO', 'TANKO'], [(2, 1, "KRM"), (1, 0, "sdf")])
     right = Graph(['OPO', 'TORO', 'RMO'], [(0, 1, "asd")])
     p2 = Production(left, right, a)
 
-
-
-
-    paint(g,[p,p2])
-
-    paintMainGraph(Maing)
-
-
-    return g
+    pygame.init()
+    display_surface = pygame.display.set_mode((600, 600))
+    paint(g, [p, p2], display_surface)
+    time.sleep(2)
+    a = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf"), (2, 0, "elo")])
+    repaint(a, display_surface)
+    time.sleep(2)
+    a = Graph(['daw', 'te', 'na', 'dz', 'za'],
+              [(0, 1, "asd"), (1, 2, "sdf"), (2, 0, "elo"), (1, 4, "sdf"), (1, 3, "sdf"), (3, 2, "sdf"), (4, 2, "sdf")])
+    repaint(a, display_surface)
+    time.sleep(2)
 
 if __name__ == "__main__":
     graph = input_graph()
-    graph.print()
+    # graph.print()
