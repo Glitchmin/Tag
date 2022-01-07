@@ -1,4 +1,5 @@
 from graph import *
+import os
 
 
 def input_graph() -> Graph:
@@ -43,13 +44,52 @@ def graph_terminal_input():
 
 
 def production_terminal_input():
-    input_production = Production(graph_terminal_input(), graph_terminal_input(), [1, 1])
+    print("lhs")
+    lhs = graph_terminal_input()
+    print("rhs")
+    rhs = graph_terminal_input()
+    connecting_edges_quantity = int(input("connecting edges quantity: "))
+    connecting_edges = []
+    for i in range(connecting_edges_quantity):
+        while True:
+            new_edge_properties = input("is_outgoing label rhs_vertices_indexes: ")
+            new_edge_properties = new_edge_properties.split()
+            if len(new_edge_properties) < 3:
+                print("too few arguments")
+            elif new_edge_properties[0] == "0" or new_edge_properties[0] == "1":
+                rhs_vertices = []
+                correct = True
+                for j in range(2, len(new_edge_properties)):
+                    if not new_edge_properties[j].isdigit():
+                        correct = False
+                        break
+                    elif int(new_edge_properties[j]) >= len(rhs.labels_dict):
+                        correct = False
+                        break
+                    rhs_vertices.append(int(new_edge_properties[j]))
+
+                if correct:
+                    break
+                else:
+                    print("wrong vertices indexes")
+            else:
+                print("is outgoing must be 0 or 1")
+
+        is_outgoing = False
+        if new_edge_properties[0] == "1":
+            is_outgoing = True
+        connecting_edges.append(NewEdgesDefinition(is_outgoing, new_edge_properties[1], rhs_vertices))
+
+    input_production = Production(lhs, rhs,connecting_edges)
     return input_production
 
 
 if __name__ == "__main__":
     # graph = input_graph()
     # graph.print()
-    p = production_terminal_input()
-    # graph = graph_terminal_input()
-    # graph.print()
+    print("input main graph")
+    graph = graph_terminal_input()
+    production_quantity = int(input("production quantity: "))
+    productions = []
+    for i in range(production_quantity):
+        productions.append(production_terminal_input())
