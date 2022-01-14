@@ -6,6 +6,7 @@ from new_edges_definition import NewEdgesDefinition
 from production import Production
 import csv
 
+
 class Graph:
     def __init__(self, labels_list: List[str], edges_list: List[Tuple[int, int, str]]):
         """edges_dict - list of 3 element tuples (vertex_begin, vertex_end, label)"""
@@ -154,18 +155,39 @@ class Graph:
 
     def save_to_file(self):
         edges = self.get_edges()
-        graph_data = [len(self.labels_dict), len(edges)]
+        graph_data = [[] for _ in range(2)]
         for (vertex_id, label) in self.labels_dict.items():
-            graph_data.append(vertex_id)
-            graph_data.append(label)
+            graph_data[0].append(vertex_id)
+            graph_data[0].append(label)
         for edge in edges:
-            graph_data.append(edge[0])
-            graph_data.append(edge[1])
-            graph_data.append(edge[2])
-        save_file = open('graph.csv', 'w')
-        writer = csv.writer(save_file)
-        writer.writerow(graph_data)
-        save_file.close()
+            graph_data[1].append(edge[0])
+            graph_data[1].append(edge[1])
+            graph_data[1].append(edge[2])
+        with open('graph.csv', 'w', newline='') as save_file:
+            writer = csv.writer(save_file)
+            writer.writerows(graph_data)
 
+    @staticmethod
+    def parse_file_input() -> Tuple[List[str], List[str]]:
+        with open('graph.csv') as save_file:
+            graph_data_reader = csv.reader(save_file)
+            graph_data = []
+            for data_line in graph_data_reader:
+                graph_data.append(data_line)
+            return graph_data[0], graph_data[1]
 
-
+    @staticmethod
+    def read_from_file() -> Graph:
+        new_graph = Graph(['A'], [(0, 0, "asd")])
+        new_graph.clear()
+        graph_vertices, graph_edges = Graph.parse_file_input()
+        for vertex in range(0, len(graph_vertices), 2):
+            vertex_id = int(graph_vertices[vertex])
+            vertex_label = graph_vertices[vertex + 1]
+            new_graph.outgoing_edges_dict.update({vertex_id: set({})})
+            new_graph.ingoing_edges_dict.update({vertex_id: set({})})
+            new_graph.next_v_ID = max(new_graph.next_v_ID, vertex_id)
+            new_graph.labels_dict.update({vertex_id: vertex_label})
+        for edge in range(0, len(graph_edges), 3):
+            new_graph.add_edge((int(graph_edges[edge]), int(graph_edges[edge+1]), graph_edges[edge+2]))
+        return new_graph
