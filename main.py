@@ -1,8 +1,10 @@
 from graph import *
+from collections import deque
+from copy import deepcopy
 import os
 
 
-def input_graph() -> Graph:
+def input_graph() -> Graph: #do wywalenia soon
     g = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
     g.add_vertex("U")
     g.add_edges([(3, 2, "dfg")])
@@ -105,14 +107,31 @@ def production_terminal_input():
     input_production = Production(lhs, rhs, connecting_edges)
     return input_production
 
-
 if __name__ == "__main__":
-    # graph = input_graph()
-    # graph.print()
     print("input main graph")
     graph = graph_terminal_input()
+    previous_graphs = deque()
     graph.print()
     production_quantity = input_quantity("productions")
     productions = []
     for i in range(production_quantity):
         productions.append(production_terminal_input())
+    while True:
+        prod = input("enter production id and on which vertices it should be used")
+        prod.split(" ")
+        prod_id = int(prod[0])
+        vertices = prod[1:]
+        if 0 <= prod_id <= len(productions):
+            print("wrong production id")
+            continue
+        mapping = {}
+        for lhs_id, main_id in enumerate(vertices):
+            mapping.update({lhs_id: main_id})
+        previous_graphs.append(deepcopy(graph))
+        try:
+            graph.apply_production(productions[prod_id], mapping)
+        except ValueError:
+            previous_graphs.pop()
+
+
+
