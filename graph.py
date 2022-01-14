@@ -6,6 +6,7 @@ from new_edges_definition import NewEdgesDefinition
 from production import Production
 import csv
 
+
 class Graph:
     def __init__(self, labels_list: List[str], edges_list: List[Tuple[int, int, str]]):
         """edges_dict - list of 3 element tuples (vertex_begin, vertex_end, label)"""
@@ -152,20 +153,34 @@ class Graph:
         self.ingoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
         self.labels_dict: Dict[int, str] = {}
 
-    def save_to_file(self):
+    def save_to_file(self):#work in progress
         edges = self.get_edges()
-        graph_data = [len(self.labels_dict), len(edges)]
+        graph_data = [[] for _ in range(2)]
+        #graph_data[0] = [len(self.labels_dict), len(edges)]
         for (vertex_id, label) in self.labels_dict.items():
-            graph_data.append(vertex_id)
-            graph_data.append(label)
+            graph_data[0].append(vertex_id)
+            graph_data[0].append(label)
         for edge in edges:
-            graph_data.append(edge[0])
-            graph_data.append(edge[1])
-            graph_data.append(edge[2])
-        save_file = open('graph.csv', 'w')
-        writer = csv.writer(save_file)
-        writer.writerow(graph_data)
-        save_file.close()
+            graph_data[1].append(edge[0])
+            graph_data[1].append(edge[1])
+            graph_data[1].append(edge[2])
+        with open('graph.csv', 'w', newline='') as save_file:  # writer = csv.writer(save)
+            writer = csv.writer(save_file)
+            writer.writerows(graph_data)
 
+    @staticmethod
+    def parse_file_input() -> Tuple[List[str]]:#work in progress
+        with open('graph.csv') as save_file:
+            graph_data_reader = csv.reader(save_file)
+            graph_data = []
+            for data_line in graph_data_reader:
+                graph_data.append(data_line)
+            print(graph_data)
+            return graph_data
 
+    @staticmethod
+    def read_from_file() -> Graph:#work in progess
+        new_graph = Graph(['A'], [(0, 0, "asd")])
+        new_graph.clear()
+        print(Graph.parse_file_input())
 
