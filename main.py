@@ -107,12 +107,13 @@ def production_terminal_input():
 
 
 if __name__ == "__main__":
-    # graph = input_graph()
-    # graph.print()
-    print("input main graph")
+    graph = input_graph()
+    graph.print()
+    graph.save_to_file()
+    '''print("input main graph")
     graph = graph_terminal_input()
     graph.print()
     production_quantity = input_quantity("productions")
     productions = []
     for i in range(production_quantity):
-        productions.append(production_terminal_input())
+        productions.append(production_terminal_input())'''

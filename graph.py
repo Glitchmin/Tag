@@ -4,7 +4,7 @@ from typing import List, Tuple, Dict, Set
 
 from new_edges_definition import NewEdgesDefinition
 from production import Production
-
+import csv
 
 class Graph:
     def __init__(self, labels_list: List[str], edges_list: List[Tuple[int, int, str]]):
@@ -151,3 +151,21 @@ class Graph:
         self.outgoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
         self.ingoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
         self.labels_dict: Dict[int, str] = {}
+
+    def save_to_file(self):
+        edges = self.get_edges()
+        graph_data = [len(self.labels_dict), len(edges)]
+        for (vertex_id, label) in self.labels_dict.items():
+            graph_data.append(vertex_id)
+            graph_data.append(label)
+        for edge in edges:
+            graph_data.append(edge[0])
+            graph_data.append(edge[1])
+            graph_data.append(edge[2])
+        save_file = open('graph.csv', 'w')
+        writer = csv.writer(save_file)
+        writer.writerow(graph_data)
+        save_file.close()
+
+
+
