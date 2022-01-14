@@ -1,10 +1,10 @@
 from graph import *
-from collections import deque
 from copy import deepcopy
+from graph_history import *
 import os
 
 
-def input_graph() -> Graph: #do wywalenia soon
+def input_graph() -> Graph:  # do wywalenia soon
     g = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
     g.add_vertex("U")
     g.add_edges([(3, 2, "dfg")])
@@ -32,7 +32,8 @@ def input_vertices(terminal_graph: Graph):
 def edge_input_parse(edge_input: List[str], vertices_quantity: int) -> bool:
     for label_part in range(3, len(edge_input)):
         edge_input[2] += " " + edge_input[label_part]
-    if not edge_input[0].isdigit() or not edge_input[1].isdigit() or int(edge_input[0]) >= vertices_quantity or int(edge_input[1]) >= vertices_quantity:
+    if not edge_input[0].isdigit() or not edge_input[1].isdigit() or int(edge_input[0]) >= vertices_quantity or int(
+            edge_input[1]) >= vertices_quantity:
         print("edge must begin and end in a existing vertex")
         return False
     return True
@@ -72,7 +73,8 @@ def input_rhs_vertices(rhs_vertices_quantity: int) -> List[int]:
         rhs_vertices_input = rhs_vertices_input.split()
         rhs_vertices = []
         for rhs_vertex in range(len(rhs_vertices_input)):
-            if not rhs_vertices_input[rhs_vertex].isdigit() or int(rhs_vertices_input[rhs_vertex]) >= rhs_vertices_quantity:
+            if not rhs_vertices_input[rhs_vertex].isdigit() or int(
+                    rhs_vertices_input[rhs_vertex]) >= rhs_vertices_quantity:
                 print("wrong vertices indexes")
                 invalid_data = True
                 break
@@ -107,16 +109,19 @@ def production_terminal_input():
     input_production = Production(lhs, rhs, connecting_edges)
     return input_production
 
+
 if __name__ == "__main__":
     print("input main graph")
     graph = graph_terminal_input()
-    previous_graphs = deque()
+    graph_history = GraphHistory()
     graph.print()
     production_quantity = input_quantity("productions")
     productions = []
     for i in range(production_quantity):
         productions.append(production_terminal_input())
     while True:
+        graph = graph_history.get_current()
+        # painting graph in gui
         prod = input("enter production id and on which vertices it should be used")
         prod.split(" ")
         prod_id = int(prod[0])
@@ -127,11 +132,8 @@ if __name__ == "__main__":
         mapping = {}
         for lhs_id, main_id in enumerate(vertices):
             mapping.update({lhs_id: main_id})
-        previous_graphs.append(deepcopy(graph))
+        graph_history.add(deepcopy(graph))
         try:
             graph.apply_production(productions[prod_id], mapping)
         except ValueError:
-            previous_graphs.pop()
-
-
-
+            continue
