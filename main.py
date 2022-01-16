@@ -64,7 +64,7 @@ def graph_terminal_input(is_main=False) -> Graph:
     terminal_graph = Graph([], [])
     input_vertices(terminal_graph)
     input_edge(terminal_graph)
-    graph.save_to_file()
+    terminal_graph.save_to_file()
     return terminal_graph
 
 
