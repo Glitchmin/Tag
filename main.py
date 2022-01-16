@@ -141,7 +141,7 @@ if __name__ == "__main__":
         graph.print()
         # TODO here graph should be painted
         prod = input("enter production id and on which vertices it should be used")
-        prod.split(" ")
+        prod = prod.split(" ")
         prod_id = int(prod[0])
         vertices = prod[1:]
         if 0 > prod_id or prod_id >= len(productions):
