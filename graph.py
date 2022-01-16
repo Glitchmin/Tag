@@ -136,13 +136,15 @@ class Graph:
 
         for new_edges_def in production.new_edges_defs:
             self.create_new_edges(new_edges_def, removed_edges, rhs_to_self_mapping)
+        self.save_to_file()
 
     def print(self):
         for vertex in self.labels_dict:
             print("vertexID: ", vertex, " vertexLabel", self.labels_dict.get(vertex))
+            print("Outgoing edges: ", end='')
             for edge in self.outgoing_edges_dict.get(vertex):
                 print(edge, end=", ")
-            print()
+            print("\nIngoing edges: ", end='')
             for edge in self.ingoing_edges_dict.get(vertex):
                 print(edge, end=", ")
             print()
@@ -189,5 +191,5 @@ class Graph:
             new_graph.next_v_ID = max(new_graph.next_v_ID, vertex_id)
             new_graph.labels_dict.update({vertex_id: vertex_label})
         for edge in range(0, len(graph_edges), 3):
-            new_graph.add_edge((int(graph_edges[edge]), int(graph_edges[edge+1]), graph_edges[edge+2]))
+            new_graph.add_edge((int(graph_edges[edge]), int(graph_edges[edge + 1]), graph_edges[edge + 2]))
         return new_graph

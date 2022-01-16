@@ -1,7 +1,6 @@
 from graph import *
 from copy import deepcopy
 from graph_history import *
-import os
 
 
 def input_graph() -> Graph:  # do wywalenia soon
@@ -22,7 +21,6 @@ def input_quantity(value_name: str) -> int:
 
 
 def input_vertices(terminal_graph: Graph):
-    vertices_quantity = "not digit"
     vertices_quantity = input_quantity("vertices")
     for vertex_nb in range(int(vertices_quantity)):
         terminal_graph.add_vertex(str(input("vertex %d label: " % vertex_nb)))
@@ -56,11 +54,17 @@ def input_edge(terminal_graph: Graph):
                 terminal_graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
 
 
-def graph_terminal_input():
-    terminal_graph = Graph(['A'], [(0, 0, "asd")])
-    terminal_graph.clear()
+def graph_terminal_input(is_main=False) -> Graph:
+    while True and is_main:
+        which_graph = input('If you want to enter new graph type "1", if you want to read from file type "0"')
+        if which_graph == '0':
+            return Graph.read_from_file()
+        if which_graph == '1':
+            break
+    terminal_graph = Graph([], [])
     input_vertices(terminal_graph)
     input_edge(terminal_graph)
+    graph.save_to_file()
     return terminal_graph
 
 
@@ -97,7 +101,7 @@ def input_new_edge(rhs_vertices_quantity: int) -> NewEdgesDefinition:
         return NewEdgesDefinition(is_outgoing, new_edge_label, input_rhs_vertices(rhs_vertices_quantity))
 
 
-def production_terminal_input():
+def input_new_production() -> Production:
     print("lhs")
     lhs = graph_terminal_input()
     print("rhs")
@@ -110,23 +114,37 @@ def production_terminal_input():
     return input_production
 
 
+def productions_terminal_input() -> List[Production]:
+    while True:
+        which_graph = input('If you want to enter new productions type "1", if you want to read from file type "0"')
+        if which_graph == '0':
+            return []  # TODO productions read from file
+        if which_graph == '1':
+            break
+    production_quantity = input_quantity("productions")
+    production_list = []
+    for i in range(production_quantity):
+        production_list.append(input_new_production())
+    return production_list
+
+
 if __name__ == "__main__":
     print("input main graph")
-    graph = graph_terminal_input()
+    graph = graph_terminal_input(True)
     graph_history = GraphHistory()
+    graph_history.add(graph)
     graph.print()
-    production_quantity = input_quantity("productions")
-    productions = []
-    for i in range(production_quantity):
-        productions.append(production_terminal_input())
+    productions = productions_terminal_input()
+
     while True:
         graph = graph_history.get_current()
-        # painting graph in gui
+        graph.print()
+        # TODO here graph should be painted
         prod = input("enter production id and on which vertices it should be used")
         prod.split(" ")
         prod_id = int(prod[0])
         vertices = prod[1:]
-        if 0 <= prod_id <= len(productions):
+        if 0 > prod_id or prod_id >= len(productions):
             print("wrong production id")
             continue
         mapping = {}
