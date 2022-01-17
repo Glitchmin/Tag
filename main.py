@@ -2,6 +2,8 @@ from graph import *
 from copy import deepcopy
 from graph_history import *
 
+import os.path
+
 
 def input_graph() -> Graph:  # do wywalenia soon
     g = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
@@ -115,16 +117,22 @@ def input_new_production() -> Production:
 
 
 def productions_terminal_input() -> List[Production]:
-    while True:
-        which_graph = input('If you want to enter new productions type "1", if you want to read from file type "0"')
-        if which_graph == '0':
-            return []  # TODO productions read from file
-        if which_graph == '1':
-            break
-    production_quantity = input_quantity("productions")
     production_list = []
-    for i in range(production_quantity):
-        production_list.append(input_new_production())
+    while True:
+        which_prod = input('If you want to enter new productions type "1", if you want to read from file type "0"')
+        if which_prod == '0':
+            i = 1
+            while os.path.isfile('productions/production' + str(i)+'_left.csv'):
+                print(i, "")
+                production_list.append(Production.read_from_file(i))
+                i += 1
+            break
+
+        if which_prod == '1':
+            production_quantity = input_quantity("productions")
+            for i in range(production_quantity):
+                production_list.append(input_new_production())
+            break
     return production_list
 
 
@@ -135,6 +143,9 @@ if __name__ == "__main__":
     graph_history.add(graph)
     graph.print()
     productions = productions_terminal_input()
+
+    for production in productions:
+        production.save_to_file()
 
     while True:
         graph = graph_history.get_current()

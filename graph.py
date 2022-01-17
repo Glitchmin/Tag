@@ -155,7 +155,7 @@ class Graph:
         self.ingoing_edges_dict: Dict[int, Set[Tuple[int, str]]] = {}
         self.labels_dict: Dict[int, str] = {}
 
-    def save_to_file(self):
+    def save_to_file(self, filename='graph.csv'):
         edges = self.get_edges()
         graph_data = [[] for _ in range(2)]
         for (vertex_id, label) in self.labels_dict.items():
@@ -165,13 +165,13 @@ class Graph:
             graph_data[1].append(edge[0])
             graph_data[1].append(edge[1])
             graph_data[1].append(edge[2])
-        with open('graph.csv', 'w', newline='') as save_file:
+        with open(filename, 'w', newline='') as save_file:
             writer = csv.writer(save_file)
             writer.writerows(graph_data)
 
     @staticmethod
-    def parse_file_input() -> Tuple[List[str], List[str]]:
-        with open('graph.csv') as save_file:
+    def parse_file_input(filename) -> Tuple[List[str], List[str]]:
+        with open(filename) as save_file:
             graph_data_reader = csv.reader(save_file)
             graph_data = []
             for data_line in graph_data_reader:
@@ -179,10 +179,10 @@ class Graph:
             return graph_data[0], graph_data[1]
 
     @staticmethod
-    def read_from_file() -> Graph:
+    def read_from_file(filename='graph.csv') -> Graph:
         new_graph = Graph(['A'], [(0, 0, "asd")])
         new_graph.clear()
-        graph_vertices, graph_edges = Graph.parse_file_input()
+        graph_vertices, graph_edges = Graph.parse_file_input(filename)
         for vertex in range(0, len(graph_vertices), 2):
             vertex_id = int(graph_vertices[vertex])
             vertex_label = graph_vertices[vertex + 1]
