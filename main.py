@@ -13,10 +13,10 @@ def input_graph() -> Graph:  # do wywalenia soon
 
 def input_quantity(value_name: str) -> int:
     quantity = "not a quantity"
-    while not quantity.isdigit() or (quantity.isdigit() and int(quantity) == 0):
+    while not quantity.isdigit():
         quantity = input("give a quantity of %s (%s are indexed from 0): " % (value_name, value_name))
         if not quantity.isdigit() or int(quantity) == 0:
-            print("%s quantity must be a positive integer" % value_name)
+            print("%s quantity must be a non negative integer" % value_name)
     return int(quantity)
 
 
