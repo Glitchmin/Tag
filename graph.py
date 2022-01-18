@@ -21,6 +21,9 @@ class Graph:
 
         self.add_edges(edges_list)
 
+    def vertices_number(self):
+        return len(self.labels_dict)
+
     def add_vertex(self, label: str, edges_list=None) -> int:
         if edges_list is None:
             edges_list = []

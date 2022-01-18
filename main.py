@@ -17,7 +17,7 @@ def input_quantity(value_name: str) -> int:
     quantity = "not a quantity"
     while not quantity.isdigit():
         quantity = input("give a quantity of %s (%s are indexed from 0): " % (value_name, value_name))
-        if not quantity.isdigit() or int(quantity) == 0:
+        if not quantity.isdigit():
             print("%s quantity must be a non negative integer" % value_name)
     return int(quantity)
 
@@ -55,10 +55,12 @@ def input_edge(terminal_graph: Graph):
             if edge_input_parse(edge_input, vertices_quantity):
                 terminal_graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
 
+def choose_graph():
+    return input('If you want to enter new productions type "1", if you want to read from file type "0": ')
 
 def graph_terminal_input(is_main=False) -> Graph:
     while True and is_main:
-        which_graph = input('If you want to enter new graph type "1", if you want to read from file type "0"')
+        which_graph = choose_graph()
         if which_graph == '0':
             return Graph.read_from_file()
         if which_graph == '1':
@@ -151,18 +153,29 @@ if __name__ == "__main__":
         graph = graph_history.get_current()
         graph.print()
         # TODO here graph should be painted
-        prod = input("enter production id and on which vertices it should be used")
-        prod = prod.split(" ")
+        prod = input("enter production id and on which vertices it should be used: ")
+        prod = prod.split()
+        if len(prod) == 0 or not all(el.isdigit() for el in prod):
+            print('wrong input')
+            continue
+
+        prod = list(map(int, prod))
         prod_id = int(prod[0])
         vertices = prod[1:]
         if 0 > prod_id or prod_id >= len(productions):
             print("wrong production id")
             continue
+
+        if any(not (0 <= i < graph.vertices_number()) for i in prod):
+            print("wrong vertex id")
+            continue
+
         mapping = {}
         for lhs_id, main_id in enumerate(vertices):
             mapping.update({lhs_id: main_id})
         graph_history.add(deepcopy(graph))
         try:
             graph.apply_production(productions[prod_id], mapping)
-        except ValueError:
+        except ValueError as e:
+            print(e)
             continue
