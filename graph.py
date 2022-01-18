@@ -67,21 +67,23 @@ class Graph:
         return edges
 
     def validate(self, left: Graph, lhs_to_self_mapping: Dict[int, int]) -> bool:
-        self_to_lhs_mapping = {v: k for k, v in lhs_to_self_mapping.items()}
         for lhs_ID, self_ID in lhs_to_self_mapping.items():
             if self.labels_dict.get(self_ID) != left.labels_dict.get(lhs_ID):
                 return False
-            matched_edges = 0
-            for self_edge, left_edge in zip(self.outgoing_edges_dict.get(self_ID),
-                                            left.outgoing_edges_dict.get(self_to_lhs_mapping.get(self_ID))):
-                if not self_to_lhs_mapping.keys().__contains__(self_edge[0]):
+        for left_ID, left_edges in left.outgoing_edges_dict.items():
+            "checking if self contains all edges which are in a left graph"
+            for left_end_ID, left_label in left_edges:
+                if (lhs_to_self_mapping.get(left_end_ID), left_label) not in \
+                        self.outgoing_edges_dict.get(lhs_to_self_mapping.get(left_ID)):
                     return False
-                if left_edge[1] != self_edge[1] or left_edge[0] != self_to_lhs_mapping.get(self_edge[0]):
-                    return False
-                matched_edges += 1
-            if matched_edges != len(left.outgoing_edges_dict.get(lhs_ID)):
+        for left_ID in left.outgoing_edges_dict.keys():
+            "checking if self doesn't contain any additional edges between vertices from a left graph"
+            edges = 0
+            for end_id, _ in self.outgoing_edges_dict.get(lhs_to_self_mapping.get(left_ID)):
+                if end_id in lhs_to_self_mapping.values():
+                    edges += 1
+            if edges != len(left.outgoing_edges_dict.get(left_ID)):
                 return False
-
         return True
 
     def get_edges_connecting_subgraph(self, indexes: Set[int]) -> List[Tuple[int, int, str]]:
