@@ -55,8 +55,10 @@ def input_edge(terminal_graph: Graph):
             if edge_input_parse(edge_input, vertices_quantity):
                 terminal_graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
 
+
 def choose_graph():
     return input('If you want to enter new productions type "1", if you want to read from file type "0": ')
+
 
 def graph_terminal_input(is_main=False) -> Graph:
     while True and is_main:
@@ -91,7 +93,7 @@ def input_rhs_vertices(rhs_vertices_quantity: int) -> List[int]:
     return rhs_vertices
 
 
-def input_new_edge(rhs_vertices_quantity: int) -> NewEdgesDefinition:
+def input_new_edge(rhs_vertices_quantity: int) -> NewEdgesDefinition:  # TODO change rhs vertices to include labels
     while True:
         is_outgoing = input("is outgoing (0 or 1): ")
         if is_outgoing != '0' and is_outgoing != '1':
@@ -124,7 +126,7 @@ def productions_terminal_input() -> List[Production]:
         which_prod = input('If you want to enter new productions type "1", if you want to read from file type "0"')
         if which_prod == '0':
             i = 1
-            while os.path.isfile('productions/production' + str(i)+'_left.csv'):
+            while os.path.isfile('productions/production' + str(i) + '_left.csv'):
                 print(i, "")
                 production_list.append(Production.read_from_file(i))
                 i += 1

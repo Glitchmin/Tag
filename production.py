@@ -19,7 +19,7 @@ class Production:
         self.right_graph = right_graph
         self.new_edges_defs = new_edges_defs
 
-    def save_to_file(self):
+    def save_to_file(self): # TODO change rhs vertices to include labels
         directory_name = "productions\\" if ("Windows" in platform.system()) else "productions/"
         Path(directory_name).mkdir(parents=True, exist_ok=True)
 
@@ -41,7 +41,7 @@ class Production:
             writer.writerows(new_edges_defs_data)
 
     @staticmethod
-    def read_from_file(file_number):
+    def read_from_file(file_number): # TODO change rhs vertices to include labels
 
         new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
 
