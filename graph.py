@@ -118,11 +118,11 @@ class Graph:
                 """if mapping.values doesn't contain a vertex form removed it means it wasn't part of a subgraph,
                 (doesn't work opposite way)"""
                 if new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[1]):
-                    for rhs_vertex in new_edges_def.rhs_vertices:
-                        self.add_edge((rhs_to_self_mapping.get(rhs_vertex), removed_edge[1], new_edges_def.label))
+                    for rhs_vertex, new_label in new_edges_def.rhs_vertices:
+                        self.add_edge((rhs_to_self_mapping.get(rhs_vertex), removed_edge[1], new_label))
                 if not new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[0]):
-                    for rhs_vertex in new_edges_def.rhs_vertices:
-                        self.add_edge((removed_edge[0], rhs_to_self_mapping.get(rhs_vertex), new_edges_def.label))
+                    for rhs_vertex, new_label in new_edges_def.rhs_vertices:
+                        self.add_edge((removed_edge[0], rhs_to_self_mapping.get(rhs_vertex), new_label))
 
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
         """lhs - left hand side of the production"""
