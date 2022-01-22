@@ -1,0 +1,5 @@
+strict graph "" {
+	edge [forcelabels=True];
+	1 -- 2	[label=gfd];
+	2 -- 3	[label=fds];
+}

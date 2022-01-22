@@ -1,0 +1,5 @@
+strict digraph "" {
+	edge [forcelabels=True];
+	0 -> 3	[label=l];
+	0 -> 1	[label=m];
+}
