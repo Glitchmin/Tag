@@ -16,5 +16,4 @@ class RandomGraph:
             edges_list.append((random.randint(0, vertices_quantity-1),
                                random.randint(0, vertices_quantity-1),
                                chr(random.randint(65, 101))))
-
         return Graph(labels_list, edges_list)
