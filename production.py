@@ -19,7 +19,7 @@ class Production:
         self.right_graph = right_graph
         self.new_edges_defs = new_edges_defs
 
-    def save_to_file(self): # TODO change rhs vertices to include labels
+    def save_to_file(self):  # TODO change rhs vertices to include labels
         directory_name = "productions\\" if ("Windows" in platform.system()) else "productions/"
         Path(directory_name).mkdir(parents=True, exist_ok=True)
 
@@ -33,16 +33,18 @@ class Production:
         for i in range(len(self.new_edges_defs)):
             new_edges_defs_data[i].append(self.new_edges_defs[i].is_outgoing)
             new_edges_defs_data[i].append(self.new_edges_defs[i].label)
-            new_edges_defs_data[i].append(self.new_edges_defs[i].rhs_vertices)
+            new_edges_defs_data[i].append(len(self.new_edges_defs[i].rhs_vertices))
+            for rhs_vertice in self.new_edges_defs[i].rhs_vertices:
+                new_edges_defs_data[i].append(rhs_vertice[0])
+                new_edges_defs_data[i].append(rhs_vertice[1])
 
         with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
             writer = csv.writer(save_file)
-            writer.writerow([len(self.new_edges_defs)])
             writer.writerows(new_edges_defs_data)
         return Production.file_counter
 
     @staticmethod
-    def read_from_file(file_number): # TODO change rhs vertices to include labels
+    def read_from_file(file_number):  # TODO change rhs vertices to include labels
 
         new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
 
@@ -50,12 +52,19 @@ class Production:
         new_prod.left_graph = graph.Graph.read_from_file(filename + '_left.csv')
         new_prod.right_graph = graph.Graph.read_from_file(filename + '_right.csv')
 
-        with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
-            new_edges_defs_data = csv.reader(save_file)
+        with open(filename + '_new_edges_defs.csv', 'r+', newline='') as save_file:
+            new_edges_defs_reader = csv.reader(save_file)
+            new_edges_defs_data = []
+            for new_edges_line in new_edges_defs_reader:
 
-        for i in range(len(new_prod.new_edges_defs)):
-            new_edges_defs_data[i].append(new_prod.new_edges_defs[i].is_outgoing)
-            new_edges_defs_data[i].append(new_prod.new_edges_defs[i].label)
-            new_edges_defs_data[i].append(new_prod.new_edges_defs[i].rhs_vertices)
-        new_prod.new_edges_defs = new_edges_defs_data
+                a = []
+                print(int(new_edges_line[2]))
+                for i in range(2, 2 + 2 * int(new_edges_line[2]), 2):
+                    print(i)
+                    a.append((int(new_edges_line[i+1]), new_edges_line[i + 2]))
+
+                new_edges_defs_data.append(
+                    NewEdgesDefinition(bool(new_edges_line[0]), new_edges_line[1], a))
+
+            new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
