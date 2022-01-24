@@ -21,6 +21,15 @@ class Graph:
 
         self.add_edges(edges_list)
 
+    def __eq__(self, other):
+        if not isinstance(other, Graph):
+            return False
+        if self.labels_dict != other.labels_dict or \
+                self.ingoing_edges_dict != other.ingoing_edges_dict or \
+                self.outgoing_edges_dict != other.outgoing_edges_dict:
+            return False
+        return True
+
     def vertices_number(self):
         return len(self.labels_dict)
 
