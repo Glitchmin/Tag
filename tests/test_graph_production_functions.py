@@ -4,7 +4,7 @@ from graph import Graph
 from production import Production
 
 
-class GraphTest(unittest.TestCase):
+class GraphProductionTest(unittest.TestCase):
 
     def test_validate(self):
         graph1 = Graph(['A'], [])
