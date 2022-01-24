@@ -26,7 +26,8 @@ class Graph:
             return False
         if self.labels_dict != other.labels_dict or \
                 self.ingoing_edges_dict != other.ingoing_edges_dict or \
-                self.outgoing_edges_dict != other.outgoing_edges_dict:
+                self.outgoing_edges_dict != other.outgoing_edges_dict or \
+                self.next_v_ID != other.next_v_ID:
             return False
         return True
 
