@@ -129,10 +129,10 @@ class Graph:
             if removed_edge[2] == new_edges_def.label:
                 """if mapping.values doesn't contain a vertex form removed it means it wasn't part of a subgraph,
                 (doesn't work opposite way)"""
-                if new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[1]):
+                if new_edges_def.is_outgoing and not removed_edge[1] in rhs_to_self_mapping.values():
                     for rhs_vertex, new_label in new_edges_def.rhs_vertices:
                         self.add_edge((rhs_to_self_mapping.get(rhs_vertex), removed_edge[1], new_label))
-                if not new_edges_def.is_outgoing and not rhs_to_self_mapping.values().__contains__(removed_edge[0]):
+                if not new_edges_def.is_outgoing and not removed_edge[0] in rhs_to_self_mapping.values():
                     for rhs_vertex, new_label in new_edges_def.rhs_vertices:
                         self.add_edge((removed_edge[0], rhs_to_self_mapping.get(rhs_vertex), new_label))
 
