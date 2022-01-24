@@ -1,8 +1,0 @@
-strict digraph "" {
-	edge [forcelabels=True];
-	0 -> 3	[label=mamunia];
-	0 -> 2	[label=grazka];
-	1 -> 3	[label=emo];
-	1 -> 2	[label=elo];
-	1 -> 4	[label=hello];
-}

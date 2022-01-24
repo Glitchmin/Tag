@@ -1,7 +1,0 @@
-strict digraph "" {
-	edge [forcelabels=True];
-	0 -> 1	[label=m];
-	0 -> 2	[label=k];
-	1 -> 0;
-	1 -> 2	[label=l];
-}
