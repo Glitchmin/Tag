@@ -4,6 +4,14 @@ import os
 
 class TerminalInput:
     @staticmethod
+    def input_graph() -> Graph:  # do wywalenia soon
+        g = Graph(['A', 'G', 'H'], [(0, 1, "asd"), (1, 2, "sdf")])
+        g.add_vertex("U")
+        g.add_edges([(3, 2, "dfg")])
+        g.remove_vertex(3)
+        return g
+
+    @staticmethod
     def input_quantity(value_name: str) -> int:
         quantity = "not a quantity"
         while not quantity.isdigit():
