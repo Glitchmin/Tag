@@ -43,11 +43,11 @@ class Production:
     @staticmethod
     def read_from_file(file_number): # TODO change rhs vertices to include labels
 
-        new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
+        new_prod = Production(Graph(['A'], [(0, 0, "asd")]), Graph(['A'], [(0, 0, "asd")]), [])
 
         filename = 'productions/production' + str(file_number)
-        new_prod.left_graph = graph.Graph.read_from_file(filename + '_left.csv')
-        new_prod.right_graph = graph.Graph.read_from_file(filename + '_right.csv')
+        new_prod.left_graph = Graph.read_from_file(filename + '_left.csv')
+        new_prod.right_graph = Graph.read_from_file(filename + '_right.csv')
 
         with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
             new_edges_defs_data = csv.reader(save_file)
