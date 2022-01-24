@@ -39,6 +39,7 @@ class Production:
             writer = csv.writer(save_file)
             writer.writerow([len(self.new_edges_defs)])
             writer.writerows(new_edges_defs_data)
+        return Production.file_counter
 
     @staticmethod
     def read_from_file(file_number): # TODO change rhs vertices to include labels
