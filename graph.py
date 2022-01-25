@@ -135,7 +135,7 @@ class Graph:
                     considered_vertices.add(vertex)
         return considered_vertices
 
-    def create_new_edges(self, new_edges_def: NewEdgesDefinition, removed_edges: List[Tuple[int, int, str]],
+    def create_new_edges(self, new_edges_def: NewEdgesDefinition,
                          rhs_to_self_mapping: Dict[int, int], considered_vertices: Set[int]):
         for rest_of_graph_label, rhs_vertex_index, new_edge_label, is_outgoing in new_edges_def.new_edges_params:
             for vertex in considered_vertices:
@@ -144,18 +144,6 @@ class Graph:
                         self.add_edge((rhs_to_self_mapping.get(rhs_vertex_index), vertex, new_edge_label))
                     else:
                         self.add_edge((vertex, rhs_to_self_mapping.get(rhs_vertex_index), new_edge_label))
-        '''
-        WIEM BRZYDKO ALE JEST 5:00 i w sumie zostawiam to bo jakbyscie chieli szybko wrócić bez jabnia się zgitem to proszę bardzo
-        for removed_edge in removed_edges:
-            if removed_edge[2] == new_edges_def.label:
-                """if mapping.values doesn't contain a vertex form removed it means it wasn't part of a subgraph,
-                (doesn't work opposite way)"""
-                if new_edges_def.is_outgoing and not removed_edge[1] in rhs_to_self_mapping.values():
-                    for rhs_vertex, new_label in new_edges_def.rhs_vertices:
-                        self.add_edge((rhs_to_self_mapping.get(rhs_vertex), removed_edge[1], new_label))
-                if not new_edges_def.is_outgoing and not removed_edge[0] in rhs_to_self_mapping.values():
-                    for rhs_vertex, new_label in new_edges_def.rhs_vertices:
-                        self.add_edge((removed_edge[0], rhs_to_self_mapping.get(rhs_vertex), new_label))'''
 
     def apply_production(self, production: Production, lhs_to_self_mapping: Dict[int, int]):
         """lhs - left hand side of the production"""
@@ -168,8 +156,6 @@ class Graph:
             considered_vertices_array.append(self.find_considered_vertices(new_edges_def.is_outgoing,
                                                                            new_edges_def.label,
                                                                            lhs_to_self_mapping.get(new_edges_def.lhs_index)))
-        removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(
-            set(lhs_to_self_mapping.values()))
 
         self.remove_subgraph(list(lhs_to_self_mapping.values()))
 
@@ -177,7 +163,7 @@ class Graph:
         print()
 
         for i in range(len(production.new_edges_defs)):
-            self.create_new_edges(production.new_edges_defs[i], removed_edges, rhs_to_self_mapping, considered_vertices_array[i])
+            self.create_new_edges(production.new_edges_defs[i], rhs_to_self_mapping, considered_vertices_array[i])
         self.save_to_file()
 
     def print(self):
