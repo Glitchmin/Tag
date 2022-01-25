@@ -117,9 +117,7 @@ class Graph:
         for (other_index, other_label) in other.labels_dict.items():
             other_to_self_mapping[other_index] = self.add_vertex(other_label)
 
-        self.add_edges(list(map(lambda e: (other_to_self_mapping[e[0]],
-                                           other_to_self_mapping[e[1]],
-                                           e[2]), other.get_edges())))
+        self.add_edges(list(map(lambda e: (other_to_self_mapping[e[0]], other_to_self_mapping[e[1]], e[2]), other.get_edges())))
 
         return other_to_self_mapping
 
