@@ -73,26 +73,32 @@ class TerminalInput:
         return terminal_graph
 
     @staticmethod
-    def input_rhs_vertices(rhs_vertices_quantity: int) -> List[int]:
+    def input_new_edges_params(rhs_vertices_quantity: int) -> List[Tuple[str,int,str,bool]]:
         invalid_data = True
-        rhs_vertices = []
-        while invalid_data:
-            invalid_data = False
-            rhs_vertices_input = input("rhs_vertices_indexes: ")
-            rhs_vertices_input = rhs_vertices_input.split()
-            rhs_vertices = []
-            for rhs_vertex in range(len(rhs_vertices_input)):
-                if not rhs_vertices_input[rhs_vertex].isdigit() or int(
-                        rhs_vertices_input[rhs_vertex]) >= rhs_vertices_quantity:
-                    print("wrong vertices indexes")
-                    invalid_data = True
-                    break
+        new_edges_params = []
+        n = TerminalInput.input_quantity("new_edges_params quantity")
+        for i in range(n):
+            while invalid_data:
+                invalid_data = False
+                rest_of_graph_label = input("rest_of_graph_label: ")
+                rhs_vertex_index = input("RHS vertex index: ")
+                while not rhs_vertex_index.isdigit() or int(rhs_vertex_index) >= rhs_vertices_quantity:
+                    rhs_vertex_index = input("WRONG VALUE RHS vertex index must be between 0 and RHS vertices quantity\n"
+                                             "RHS vertex index: ")
+                new_edge_label = input("new edge label: ")
+                is_outgoing = input("is outgoing (0 or 1): ")
+                while is_outgoing != '0' and is_outgoing != '1':
+                    print("wrong is_outgoing value")
+                    is_outgoing = input("is outgoing (0 or 1): ")
+                if is_outgoing == "1":
+                    is_outgoing = True
                 else:
-                    rhs_vertices.append(int(rhs_vertices_input[rhs_vertex]))
-        return rhs_vertices
+                    is_outgoing = False
+                new_edges_params.append((rest_of_graph_label, int(rhs_vertex_index), new_edge_label, is_outgoing))
+        return new_edges_params
 
     @staticmethod
-    def input_new_edge(rhs_vertices_quantity: int) -> NewEdgesDefinition:  # TODO change rhs vertices to include labels
+    def input_new_edges_definition(lhs_vertices_quantity: int, rhs_vertices_quantity: int) -> NewEdgesDefinition:
         while True:
             is_outgoing = input("is outgoing (0 or 1): ")
             if is_outgoing != '0' and is_outgoing != '1':
@@ -102,8 +108,12 @@ class TerminalInput:
                 is_outgoing = True
             else:
                 is_outgoing = False
-            new_edge_label = input("label: ")
-            return NewEdgesDefinition(is_outgoing, new_edge_label, TerminalInput.input_rhs_vertices(rhs_vertices_quantity))
+            old_label = input("label: ")
+            lhs_index = input("lhs_index: ")
+            if not lhs_index.isdigit() or int(lhs_index) >= lhs_vertices_quantity:
+                print("wrong lhs_index value")
+                continue
+            return NewEdgesDefinition(is_outgoing, old_label, int(lhs_index), TerminalInput.input_new_edges_params(rhs_vertices_quantity))
 
     @staticmethod
     def input_new_production() -> Production:
@@ -111,18 +121,18 @@ class TerminalInput:
         lhs = TerminalInput.graph_terminal_input()
         print("rhs")
         rhs = TerminalInput.graph_terminal_input()
-        connecting_edges_quantity = TerminalInput.input_quantity("connecting edges")
-        connecting_edges = []
+        connecting_edges_quantity = TerminalInput.input_quantity("subcases of embedding transformation")
+        new_edges_params = []
         for _ in range(connecting_edges_quantity):
-            connecting_edges.append(TerminalInput.input_new_edge(len(rhs.labels_dict)))
-        input_production = Production(lhs, rhs, connecting_edges)
+            new_edges_params.append(TerminalInput.input_new_edges_definition(len(lhs.labels_dict), len(rhs.labels_dict)))
+        input_production = Production(lhs, rhs, new_edges_params)
         return input_production
 
     @staticmethod
     def productions_terminal_input() -> List[Production]:
         production_list = []
         while True:
-            which_prod = input('If you want to enter new productions type "1", if you want to read from file type "0"')
+            which_prod = input('If you want to enter new productions type "1", if you want to read from file type "0": ')
             if which_prod == '0':
                 i = 1
                 while os.path.isfile('productions/production' + str(i) + '_left.csv'):
