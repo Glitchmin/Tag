@@ -29,3 +29,9 @@ class NewEdgesDefinition:
         self.lhs_index = lhs_index
         self.new_edges_params = new_edges_params
 
+    def print(self):
+        print(self.label, self.is_outgoing, self.lhs_index, "\b;", end=" ")
+        for new_edge in self.new_edges_params:
+            print(new_edge[0],new_edge[1],new_edge[2],new_edge[3],"\b;",end=" ")
+        print()
+

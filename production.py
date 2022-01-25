@@ -68,3 +68,12 @@ class Production:
 
             new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
+
+    def print(self):
+        print("LHS")
+        self.left_graph.print()
+        print("RHS")
+        self.right_graph.print()
+        print("transforamcja osadzenia")
+        for new_edge_def in self.new_edges_defs:
+            new_edge_def.print()

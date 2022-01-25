@@ -74,27 +74,24 @@ class TerminalInput:
 
     @staticmethod
     def input_new_edges_params(rhs_vertices_quantity: int) -> List[Tuple[str,int,str,bool]]:
-        invalid_data = True
         new_edges_params = []
         n = TerminalInput.input_quantity("new_edges_params quantity")
         for i in range(n):
-            while invalid_data:
-                invalid_data = False
-                rest_of_graph_label = input("rest_of_graph_label: ")
-                rhs_vertex_index = input("RHS vertex index: ")
-                while not rhs_vertex_index.isdigit() or int(rhs_vertex_index) >= rhs_vertices_quantity:
-                    rhs_vertex_index = input("WRONG VALUE RHS vertex index must be between 0 and RHS vertices quantity\n"
-                                             "RHS vertex index: ")
-                new_edge_label = input("new edge label: ")
+            rest_of_graph_label = input("rest_of_graph_label: ")
+            rhs_vertex_index = input("RHS vertex index: ")
+            while not rhs_vertex_index.isdigit() or int(rhs_vertex_index) >= rhs_vertices_quantity:
+                rhs_vertex_index = input("WRONG VALUE RHS vertex index must be between 0 and RHS vertices quantity\n"
+                                         "RHS vertex index: ")
+            new_edge_label = input("new edge label: ")
+            is_outgoing = input("is outgoing (0 or 1): ")
+            while is_outgoing != '0' and is_outgoing != '1':
+                print("wrong is_outgoing value")
                 is_outgoing = input("is outgoing (0 or 1): ")
-                while is_outgoing != '0' and is_outgoing != '1':
-                    print("wrong is_outgoing value")
-                    is_outgoing = input("is outgoing (0 or 1): ")
-                if is_outgoing == "1":
-                    is_outgoing = True
-                else:
-                    is_outgoing = False
-                new_edges_params.append((rest_of_graph_label, int(rhs_vertex_index), new_edge_label, is_outgoing))
+            if is_outgoing == "1":
+                is_outgoing = True
+            else:
+                is_outgoing = False
+            new_edges_params.append((rest_of_graph_label, int(rhs_vertex_index), new_edge_label, is_outgoing))
         return new_edges_params
 
     @staticmethod
@@ -110,9 +107,10 @@ class TerminalInput:
                 is_outgoing = False
             old_label = input("label: ")
             lhs_index = input("lhs_index: ")
-            if not lhs_index.isdigit() or int(lhs_index) >= lhs_vertices_quantity:
+            while not lhs_index.isdigit() or int(lhs_index) >= lhs_vertices_quantity:
                 print("wrong lhs_index value")
-                continue
+                lhs_index = input("lhs_index: ")
+
             return NewEdgesDefinition(is_outgoing, old_label, int(lhs_index), TerminalInput.input_new_edges_params(rhs_vertices_quantity))
 
     @staticmethod
