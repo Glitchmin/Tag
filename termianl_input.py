@@ -51,7 +51,7 @@ class TerminalInput:
             if len(edge_input) < 3:
                 print("incomplete data (label is always required)")
             else:
-                if edge_input_parse(edge_input, vertices_quantity):
+                if TerminalInput.edge_input_parse(edge_input, vertices_quantity):
                     terminal_graph.add_edge((int(edge_input[0]), int(edge_input[1]), edge_input[2]))
 
     @staticmethod
@@ -67,8 +67,8 @@ class TerminalInput:
             if which_graph == '1':
                 break
         terminal_graph = Graph([], [])
-        input_vertices(terminal_graph)
-        input_edge(terminal_graph)
+        TerminalInput.input_vertices(terminal_graph)
+        TerminalInput.input_edge(terminal_graph)
         terminal_graph.save_to_file()
         return terminal_graph
 
@@ -103,7 +103,7 @@ class TerminalInput:
             else:
                 is_outgoing = False
             new_edge_label = input("label: ")
-            return NewEdgesDefinition(is_outgoing, new_edge_label, input_rhs_vertices(rhs_vertices_quantity))
+            return NewEdgesDefinition(is_outgoing, new_edge_label, TerminalInput.input_rhs_vertices(rhs_vertices_quantity))
 
     @staticmethod
     def input_new_production() -> Production:
