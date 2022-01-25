@@ -203,7 +203,7 @@ class Graph:
             vertex_label = graph_vertices[vertex + 1]
             new_graph.outgoing_edges_dict.update({vertex_id: set({})})
             new_graph.ingoing_edges_dict.update({vertex_id: set({})})
-            new_graph.next_v_ID = max(new_graph.next_v_ID, vertex_id)
+            new_graph.next_v_ID = max(new_graph.next_v_ID, vertex_id + 1)
             new_graph.labels_dict.update({vertex_id: vertex_label})
         for edge in range(0, len(graph_edges), 3):
             new_graph.add_edge((int(graph_edges[edge]), int(graph_edges[edge + 1]), graph_edges[edge + 2]))
