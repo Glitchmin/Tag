@@ -56,7 +56,7 @@ class TerminalInput:
 
     @staticmethod
     def choose_graph():
-        return input('If you want to enter new productions type "1", if you want to read from file type "0": ')
+        return input('If you want to enter new graph type "1", if you want to read from file type "0": ')
 
     @staticmethod
     def graph_terminal_input(is_main=False) -> Graph:

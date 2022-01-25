@@ -7,13 +7,15 @@ import os.path
 if __name__ == "__main__":
     print("input main graph")
     graph = TerminalInput.graph_terminal_input(True)
+    graph.save_to_file()
     graph_history = GraphHistory()
     graph_history.add(graph)
     graph.print()
     productions = TerminalInput.productions_terminal_input()
 
     for production in productions:
-        production.save_to_file()
+        pass
+        #production.save_to_file()
 
     while True:
         graph = graph_history.get_current()
@@ -43,5 +45,5 @@ if __name__ == "__main__":
         try:
             graph.apply_production(productions[prod_id], mapping)
         except ValueError as e:
-            print(e)
+            print("VALIDATE ERROR!!!")
             continue

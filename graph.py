@@ -144,7 +144,9 @@ class Graph:
                         self.add_edge((rhs_to_self_mapping.get(rhs_vertex_index), vertex, new_edge_label))
                     else:
                         self.add_edge((vertex, rhs_to_self_mapping.get(rhs_vertex_index), new_edge_label))
-        '''for removed_edge in removed_edges:
+        '''
+        WIEM BRZYDKO ALE JEST 5:00 i w sumie zostawiam to bo jakbyscie chieli szybko wrócić bez jabnia się zgitem to proszę bardzo
+        for removed_edge in removed_edges:
             if removed_edge[2] == new_edges_def.label:
                 """if mapping.values doesn't contain a vertex form removed it means it wasn't part of a subgraph,
                 (doesn't work opposite way)"""
@@ -166,7 +168,6 @@ class Graph:
             considered_vertices_array.append(self.find_considered_vertices(new_edges_def.is_outgoing,
                                                                            new_edges_def.label,
                                                                            lhs_to_self_mapping.get(new_edges_def.lhs_index)))
-
         removed_edges: List[Tuple[int, int, str]] = self.get_edges_connecting_subgraph(
             set(lhs_to_self_mapping.values()))
 
