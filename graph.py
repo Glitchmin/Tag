@@ -45,7 +45,7 @@ class Graph:
         return self.next_v_ID - 1
 
     def remove_vertex(self, vertex_id: int):
-        if self.labels_dict.__contains__(vertex_id):
+        if vertex_id in self.labels_dict:
             self.labels_dict.pop(vertex_id)
         to_delete = []
         for edge in self.outgoing_edges_dict.get(vertex_id):
@@ -139,7 +139,7 @@ class Graph:
                          rhs_to_self_mapping: Dict[int, int], considered_vertices: Set[int]):
         for rest_of_graph_label, rhs_vertex_index, new_edge_label, is_outgoing in new_edges_def.new_edges_params:
             for vertex in considered_vertices:
-                if self.labels_dict.get(vertex) == rest_of_graph_label:
+                if vertex in self.labels_dict and self.labels_dict.get(vertex) == rest_of_graph_label:
                     if is_outgoing:
                         self.add_edge((rhs_to_self_mapping.get(rhs_vertex_index), vertex, new_edge_label))
                     else:

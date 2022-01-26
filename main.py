@@ -14,8 +14,7 @@ if __name__ == "__main__":
     productions = TerminalInput.productions_terminal_input()
 
     for production in productions:
-        pass
-        #production.save_to_file()
+        production.save_to_file()
 
     while True:
         graph = graph_history.get_current()
@@ -34,16 +33,16 @@ if __name__ == "__main__":
             print("wrong production id")
             continue
 
-        if any(not (0 <= i < graph.vertices_number()) for i in prod):
+        if any(i not in graph.labels_dict for i in prod):
             print("wrong vertex id")
             continue
 
         mapping = {}
         for lhs_id, main_id in enumerate(vertices):
             mapping.update({lhs_id: main_id})
-        graph_history.add(deepcopy(graph))
         try:
             graph.apply_production(productions[prod_id], mapping)
         except ValueError as e:
             print("VALIDATE ERROR!!!")
             continue
+        graph_history.add(deepcopy(graph))
