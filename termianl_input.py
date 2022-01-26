@@ -56,20 +56,19 @@ class TerminalInput:
 
     @staticmethod
     def choose_graph():
-        return input('If you want to enter new graph type "1", if you want to read from file type "0": ')
+        return input('If you want to read from file type "1", if you want to enter new graph type "0": ')
 
     @staticmethod
     def graph_terminal_input(is_main=False) -> Graph:
         while True and is_main:
             which_graph = TerminalInput.choose_graph()
-            if which_graph == '0':
-                return Graph.read_from_file()
             if which_graph == '1':
+                return Graph.read_from_file()
+            if which_graph == '0':
                 break
         terminal_graph = Graph([], [])
         TerminalInput.input_vertices(terminal_graph)
         TerminalInput.input_edge(terminal_graph)
-        terminal_graph.save_to_file()
         return terminal_graph
 
     @staticmethod
@@ -97,6 +96,7 @@ class TerminalInput:
     @staticmethod
     def input_new_edges_definition(lhs_vertices_quantity: int, rhs_vertices_quantity: int) -> NewEdgesDefinition:
         while True:
+            print("Enter new edges definition: ")
             is_outgoing = input("is outgoing (0 or 1): ")
             if is_outgoing != '0' and is_outgoing != '1':
                 print("wrong is_outgoing value")
@@ -130,8 +130,9 @@ class TerminalInput:
     def productions_terminal_input() -> List[Production]:
         production_list = []
         while True:
-            which_prod = input('If you want to enter new productions type "1", if you want to read from file type "0": ')
-            if which_prod == '0':
+            from_file = input('If you want to read productions from file type "1", else type "0" \n'
+                              '(WARNING: 0 potentially overrides existing files): ')
+            if from_file == '1':
                 i = 1
                 while os.path.isfile('productions/production' + str(i) + '_left.csv'):
                     print(i, "")
@@ -139,9 +140,18 @@ class TerminalInput:
                     i += 1
                 break
 
-            if which_prod == '1':
+            if from_file == '0':
+                break
+
+        while True:
+            from_terminal = input('If you want to enter new productions type "1", else type "0": ')
+            if from_terminal == '1':
                 production_quantity = TerminalInput.input_quantity("productions")
                 for i in range(production_quantity):
                     production_list.append(TerminalInput.input_new_production())
                 break
+
+            if from_terminal == '0':
+                break
+
         return production_list
