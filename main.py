@@ -33,8 +33,12 @@ if __name__ == "__main__":
             print("wrong production id")
             continue
 
-        if any(i not in graph.labels_dict for i in prod):
+        if any(i not in graph.labels_dict for i in vertices):
             print("wrong vertex id")
+            continue
+
+        if len(vertices) != len(productions[prod_id].left_graph.labels_dict):
+            print("wrong number of indices for mapping")
             continue
 
         mapping = {}
