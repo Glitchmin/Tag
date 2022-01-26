@@ -11,7 +11,7 @@ import csv
 
 
 class Production:
-    file_counter = 0
+    file_counter = -1
 
     def __init__(self, left_graph: Graph, right_graph: Graph, new_edges_defs: List[NewEdgesDefinition]):
         """rhs - right hand side of the production"""
