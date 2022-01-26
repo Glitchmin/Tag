@@ -21,12 +21,12 @@ class Production:
 
     def save_to_file(self, file_number=None):
         if file_number is None:
-            file_number = self.file_counter + 1
+            file_number = Production.file_counter + 1
 
         directory_name = "productions\\" if ("Windows" in platform.system()) else "productions/"
         Path(directory_name).mkdir(parents=True, exist_ok=True)
 
-        self.file_counter = max(file_number, Production.file_counter)
+        Production.file_counter = max(file_number, Production.file_counter)
 
         filename = 'productions/production' + str(file_number)
         print("saved", filename)
