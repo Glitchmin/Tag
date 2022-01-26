@@ -5,6 +5,8 @@ from graph import *
 
 def compare_prods(production1: Production, production2: Production) -> bool:
     answer = (len(production1.new_edges_defs) == len(production2.new_edges_defs))
+    answer = answer and production1.left_graph == production2.left_graph
+    answer = answer and production1.right_graph == production2.right_graph
     for i in range(len(production1.new_edges_defs)):
         print(production1.new_edges_defs[i].is_outgoing, production1.new_edges_defs[i].label,
               production1.new_edges_defs[i].lhs_index, production1.new_edges_defs[i].new_edges_params, end=' =? ')
