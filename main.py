@@ -14,8 +14,7 @@ if __name__ == "__main__":
     productions = TerminalInput.productions_terminal_input()
 
     for production in productions:
-        pass
-        #production.save_to_file()
+        production.save_to_file()
 
     while True:
         graph = graph_history.get_current()
