@@ -19,13 +19,13 @@ class Production:
         self.right_graph = right_graph
         self.new_edges_defs = new_edges_defs
 
-    def save_to_file(self):  # TODO change rhs vertices to include labels
+    def save_to_file(self, file_number=file_counter + 1):
         directory_name = "productions\\" if ("Windows" in platform.system()) else "productions/"
         Path(directory_name).mkdir(parents=True, exist_ok=True)
 
-        Production.file_counter += 1
+        Production.file_counter = max(file_number, Production.file_counter)
 
-        filename = 'productions/production' + str(Production.file_counter)
+        filename = 'productions/production' + str(file_number)
         self.left_graph.save_to_file(filename + '_left.csv')
         self.right_graph.save_to_file(filename + '_right.csv')
 
@@ -36,10 +36,8 @@ class Production:
             new_edges_defs_data[i].append(self.new_edges_defs[i].lhs_index)
             new_edges_defs_data[i].append(len(self.new_edges_defs[i].new_edges_params))
             for new_edge in self.new_edges_defs[i].new_edges_params:
-                new_edges_defs_data[i].append(new_edge[0])
-                new_edges_defs_data[i].append(new_edge[1])
-                new_edges_defs_data[i].append(new_edge[2])
-                new_edges_defs_data[i].append(new_edge[3])
+                for j in range(0, 4):
+                    new_edges_defs_data[i].append(new_edge[j])
 
         with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
             writer = csv.writer(save_file)
@@ -47,7 +45,7 @@ class Production:
         return Production.file_counter
 
     @staticmethod
-    def read_from_file(file_number):  # TODO change rhs vertices to include labels
+    def read_from_file(file_number):
 
         new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
 
@@ -63,12 +61,12 @@ class Production:
                 a = []
 
                 for i in range(3, 3 + 4 * int(new_edges_line[3]), 4):
-                    print(new_edges_line[i + 4])
+                    print(new_edges_line[i+4])
                     a.append((new_edges_line[i + 1], int(new_edges_line[i + 2]),
                               new_edges_line[i + 3], new_edges_line[i + 4] == 'True'))
 
                 new_edges_defs_data.append(
-                    NewEdgesDefinition(bool(new_edges_line[0]), new_edges_line[1], int(new_edges_line[2]), a))
+                    NewEdgesDefinition((new_edges_line[0]=='True'), new_edges_line[1], int(new_edges_line[2]), a))
 
             new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
