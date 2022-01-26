@@ -12,6 +12,7 @@ if __name__ == "__main__":
     graph_history.add(graph)
     graph.print()
     productions = TerminalInput.productions_terminal_input()
+    print("DEBUG Number of productions: ", len(productions))
 
     for production in productions:
         production.save_to_file()
