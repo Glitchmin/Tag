@@ -32,6 +32,7 @@ class ProductionFileHandlingTest(unittest.TestCase):
         file_num = production.save_to_file()
         production2 = Production.read_from_file(file_num)
         self.assertTrue(compare_prods(production, production2))
+
         print()
 
         production4 = Production(graph.Graph(['B'], [(0, 0, "ddc")]), graph.Graph(['A'], [(0, 0, "acd")]),
@@ -39,6 +40,22 @@ class ProductionFileHandlingTest(unittest.TestCase):
 
         production4.save_to_file(1)
         production3 = Production.read_from_file(1)
+        self.assertTrue(compare_prods(production4, production3))
+
+        file_number = production4.save_to_file()
+        production3 = Production.read_from_file(file_number)
+        self.assertTrue(compare_prods(production4, production3))
+
+        file_number = production4.save_to_file()
+        production3 = Production.read_from_file(file_number)
+        self.assertTrue(compare_prods(production4, production3))
+
+        file_number = production4.save_to_file()
+        production3 = Production.read_from_file(file_number)
+        self.assertTrue(compare_prods(production4, production3))
+
+        file_number = production4.save_to_file()
+        production3 = Production.read_from_file(file_number)
         self.assertTrue(compare_prods(production4, production3))
 
 

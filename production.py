@@ -19,13 +19,17 @@ class Production:
         self.right_graph = right_graph
         self.new_edges_defs = new_edges_defs
 
-    def save_to_file(self, file_number=file_counter + 1):
+    def save_to_file(self, file_number=None):
+        if file_number is None:
+            file_number = self.file_counter + 1
+
         directory_name = "productions\\" if ("Windows" in platform.system()) else "productions/"
         Path(directory_name).mkdir(parents=True, exist_ok=True)
 
-        Production.file_counter = max(file_number, Production.file_counter)
+        self.file_counter = max(file_number, Production.file_counter)
 
         filename = 'productions/production' + str(file_number)
+        print("saved", filename)
         self.left_graph.save_to_file(filename + '_left.csv')
         self.right_graph.save_to_file(filename + '_right.csv')
 
@@ -42,7 +46,7 @@ class Production:
         with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
             writer = csv.writer(save_file)
             writer.writerows(new_edges_defs_data)
-        return Production.file_counter
+        return file_number
 
     @staticmethod
     def read_from_file(file_number):
@@ -50,6 +54,7 @@ class Production:
         new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
 
         filename = 'productions/production' + str(file_number)
+        print("read", filename)
         new_prod.left_graph = graph.Graph.read_from_file(filename + '_left.csv')
         new_prod.right_graph = graph.Graph.read_from_file(filename + '_right.csv')
 
@@ -61,12 +66,12 @@ class Production:
                 a = []
 
                 for i in range(3, 3 + 4 * int(new_edges_line[3]), 4):
-                    print(new_edges_line[i+4])
+                    print(new_edges_line[i + 4])
                     a.append((new_edges_line[i + 1], int(new_edges_line[i + 2]),
                               new_edges_line[i + 3], new_edges_line[i + 4] == 'True'))
 
                 new_edges_defs_data.append(
-                    NewEdgesDefinition((new_edges_line[0]=='True'), new_edges_line[1], int(new_edges_line[2]), a))
+                    NewEdgesDefinition((new_edges_line[0] == 'True'), new_edges_line[1], int(new_edges_line[2]), a))
 
             new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
