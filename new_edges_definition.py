@@ -3,7 +3,8 @@ from typing import Tuple
 
 
 class NewEdgesDefinition:
-    def __init__(self, is_outgoing: bool, label: str, lhs_index: int, new_edges_params: List[Tuple[str, int, str, bool]]):
+    def __init__(self, is_outgoing: bool, label: str, lhs_index: int,
+                 new_edges_params: List[Tuple[str, int, str, bool]]):
         """
         Seating transformation description:
             Find all edges that matches (it can be more than 1) (if matches 0 we just ignore it):
@@ -32,6 +33,5 @@ class NewEdgesDefinition:
     def print(self):
         print(self.label, self.is_outgoing, self.lhs_index, "\b;", end=" ")
         for new_edge in self.new_edges_params:
-            print(new_edge[0],new_edge[1],new_edge[2],new_edge[3],"\b;",end=" ")
+            print(new_edge[0], new_edge[1], new_edge[2], new_edge[3], "\b;", end=" ")
         print()
-

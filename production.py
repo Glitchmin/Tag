@@ -33,10 +33,13 @@ class Production:
         for i in range(len(self.new_edges_defs)):
             new_edges_defs_data[i].append(self.new_edges_defs[i].is_outgoing)
             new_edges_defs_data[i].append(self.new_edges_defs[i].label)
-            new_edges_defs_data[i].append(len(self.new_edges_defs[i].rhs_vertices))
-            for rhs_vertice in self.new_edges_defs[i].rhs_vertices:
-                new_edges_defs_data[i].append(rhs_vertice[0])
-                new_edges_defs_data[i].append(rhs_vertice[1])
+            new_edges_defs_data[i].append(self.new_edges_defs[i].lhs_index)
+            new_edges_defs_data[i].append(len(self.new_edges_defs[i].new_edges_params))
+            for new_edge in self.new_edges_defs[i].new_edges_params:
+                new_edges_defs_data[i].append(new_edge[0])
+                new_edges_defs_data[i].append(new_edge[1])
+                new_edges_defs_data[i].append(new_edge[2])
+                new_edges_defs_data[i].append(new_edge[3])
 
         with open(filename + '_new_edges_defs.csv', 'w', newline='') as save_file:
             writer = csv.writer(save_file)
@@ -58,13 +61,14 @@ class Production:
             for new_edges_line in new_edges_defs_reader:
 
                 a = []
-                print(int(new_edges_line[2]))
-                for i in range(2, 2 + 2 * int(new_edges_line[2]), 2):
-                    print(i)
-                    a.append((int(new_edges_line[i+1]), new_edges_line[i + 2]))
+
+                for i in range(3, 3 + 4 * int(new_edges_line[3]), 4):
+                    print(new_edges_line[i + 4])
+                    a.append((new_edges_line[i + 1], int(new_edges_line[i + 2]),
+                              new_edges_line[i + 3], new_edges_line[i + 4] == 'True'))
 
                 new_edges_defs_data.append(
-                    NewEdgesDefinition(bool(new_edges_line[0]), new_edges_line[1], a))
+                    NewEdgesDefinition(bool(new_edges_line[0]), new_edges_line[1], int(new_edges_line[2]), a))
 
             new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
@@ -74,6 +78,6 @@ class Production:
         self.left_graph.print()
         print("RHS")
         self.right_graph.print()
-        print("transforamcja osadzenia")
+        print("transformacja osadzenia")
         for new_edge_def in self.new_edges_defs:
             new_edge_def.print()
