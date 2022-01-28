@@ -134,6 +134,7 @@ class TerminalInput:
                               '(WARNING: 0 potentially overrides existing files): ')
             if from_file == '1':
                 production_list = Production.read_all_productions()
+                break
 
             if from_file == '0':
                 break

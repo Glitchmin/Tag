@@ -49,7 +49,18 @@ def restore_graph(gh: GraphHistory):
     # TODO here graph should be painted
 
 
-# TODO add functions to modify productions
+def edit_production(productions: List[Production]):
+    edited_ix = ""
+    while True:
+        edited_ix = input("enter the index of the production to be edited: ")
+        if not edited_ix.isdigit() or not 0 <= int(edited_ix) < len(productions):
+            print("Wrong index: it must be a number between 0 and ", len(productions))
+        else:
+            break
+
+    edited_ix = int(edited_ix)
+    productions[edited_ix] = TerminalInput.input_new_production()
+    Production.save_to_file(productions[edited_ix], edited_ix)
 
 
 def main():
@@ -60,22 +71,22 @@ def main():
     graph_history.add(graph)
     graph.print()
     productions = TerminalInput.productions_terminal_input()
-    print("DEBUG Number of productions: ", len(productions))
 
     for production in productions:
         production.save_to_file()
 
     while True:
-        inp = input("p - apply production, r - restore graph, f - reload productions from files, e - edit production")
+        inp = input("p - apply production, r - restore graph, f - reload productions from files, e - edit production: ")
         if inp == 'p':
             use_production(graph_history, productions)
         if inp == 'r':
             restore_graph(graph_history)
         if inp == 'f':
             productions = Production.read_all_productions()
-            print(productions)
+            # TODO reprint productions
         if inp == 'e':
-            pass  # TODO implement
+            edit_production(productions)
+            # TODO reprint productions
 
 
 if __name__ == "__main__":
