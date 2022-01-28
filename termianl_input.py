@@ -133,12 +133,7 @@ class TerminalInput:
             from_file = input('If you want to read productions from file type "1", else type "0" \n'
                               '(WARNING: 0 potentially overrides existing files): ')
             if from_file == '1':
-                i = 0
-                while os.path.isfile('productions/production' + str(i) + '_left.csv'):
-                    print(i, "")
-                    production_list.append(Production.read_from_file(i))
-                    i += 1
-                break
+                production_list = Production.read_all_productions()
 
             if from_file == '0':
                 break

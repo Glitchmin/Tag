@@ -78,6 +78,20 @@ class Production:
             new_prod.new_edges_defs = new_edges_defs_data
         return new_prod
 
+    @staticmethod
+    def read_all_productions() -> List[Production]:
+        production_list = []
+        i = 0
+        while True:
+            production = Production.read_from_file(i)
+            if production is None:
+                break
+
+            production_list.append(production)
+            i += 1
+
+        return production_list
+
     def print(self):
         print("LHS")
         self.left_graph.print()

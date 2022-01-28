@@ -6,7 +6,7 @@ from graph_history import *
 from termianl_input import *
 
 
-def use_production(gh: GraphHistory):
+def use_production(gh: GraphHistory, productions: List[Production]):
     g = gh.get_current()
     prod = input("enter production id and on which vertices it should be used: ")
     prod = prod.split()
@@ -17,7 +17,7 @@ def use_production(gh: GraphHistory):
     prod = list(map(int, prod))
     prod_id = int(prod[0])
     vertices = prod[1:]
-    if 0 > prod_id or prod_id >= len(productions):
+    if prod_id < 0 or prod_id >= len(productions):
         print("wrong production id")
         return
 
@@ -47,10 +47,12 @@ def restore_graph(gh: GraphHistory):
     g = gh.get_current()
     g.print()
     # TODO here graph should be painted
+
+
 # TODO add functions to modify productions
 
 
-if __name__ == "__main__":
+def main():
     print("input main graph")
     graph = TerminalInput.graph_terminal_input(True)
     graph.save_to_file()
@@ -64,8 +66,17 @@ if __name__ == "__main__":
         production.save_to_file()
 
     while True:
-        inp = input("p-apply production, r-restore graph")
+        inp = input("p - apply production, r - restore graph, f - reload productions from files, e - edit production")
         if inp == 'p':
-            use_production(graph_history)
+            use_production(graph_history, productions)
         if inp == 'r':
             restore_graph(graph_history)
+        if inp == 'f':
+            productions = Production.read_all_productions()
+            print(productions)
+        if inp == 'e':
+            pass  # TODO implement
+
+
+if __name__ == "__main__":
+    main()
