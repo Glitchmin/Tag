@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os.path
 import platform
 from pathlib import Path
 
@@ -54,7 +55,10 @@ class Production:
         new_prod = Production(graph.Graph(['A'], [(0, 0, "asd")]), graph.Graph(['A'], [(0, 0, "asd")]), [])
 
         filename = 'productions/production' + str(file_number)
+        if not os.path.isfile(filename + '_left.csv'):
+            return None
         print("reading", filename)
+
         new_prod.left_graph = graph.Graph.read_from_file(filename + '_left.csv')
         new_prod.right_graph = graph.Graph.read_from_file(filename + '_right.csv')
 
@@ -64,7 +68,6 @@ class Production:
             for new_edges_line in new_edges_defs_reader:
 
                 a = []
-
                 for i in range(3, 3 + 4 * int(new_edges_line[3]), 4):
                     a.append((new_edges_line[i + 1], int(new_edges_line[i + 2]),
                               new_edges_line[i + 3], new_edges_line[i + 4] == 'True'))

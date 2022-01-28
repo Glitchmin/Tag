@@ -30,7 +30,7 @@ class ProductionFileHandlingTest(unittest.TestCase):
         production = Production(graph.Graph(['A'], [(0, 0, "abc")]), graph.Graph(['A'], [(0, 0, "acd")]),
                                 [NewEdgesDefinition(True, "a", 0, [("a", 0, "c", True), ("d", 1, "e", False)])])
         file_num = production.save_to_file()
-        production2 = Production.read_from_file(file_num)
+        production2 = Production.read_from_file(10)
         self.assertTrue(compare_prods(production, production2))
 
         print()
@@ -61,7 +61,6 @@ class ProductionFileHandlingTest(unittest.TestCase):
         production4.save_to_file(0)
         production3 = Production.read_from_file(0)
         self.assertTrue(compare_prods(production4, production3))
-
 
 
 if __name__ == '__main__':
