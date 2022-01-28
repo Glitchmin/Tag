@@ -27,40 +27,32 @@ def compare_prods(production1: Production, production2: Production) -> bool:
 
 class ProductionFileHandlingTest(unittest.TestCase):
     def test_production_file_handling(self):
-        production = Production(graph.Graph(['A'], [(0, 0, "abc")]), graph.Graph(['A'], [(0, 0, "acd")]),
-                                [NewEdgesDefinition(True, "a", 0, [("a", 0, "c", True), ("d", 1, "e", False)])])
-        file_num = production.save_to_file()
-        production2 = Production.read_from_file(10)
-        self.assertTrue(compare_prods(production, production2))
+        production1 = Production(graph.Graph(['A'], [(0, 0, "abc")]), graph.Graph(['A'], [(0, 0, "acd")]),
+                                 [NewEdgesDefinition(True, "a", 0, [("a", 0, "c", True), ("d", 1, "e", False)])])
+        file_num = production1.save_to_file()
+        production2 = Production.read_from_file(file_num)
+        self.assertTrue(compare_prods(production1, production2))
 
         print()
 
         production4 = Production(graph.Graph(['B'], [(0, 0, "ddc")]), graph.Graph(['A'], [(0, 0, "acd")]),
                                  [NewEdgesDefinition(False, "b", 0, [("c", 0, "d", True), ("d", 1, "e", False)])])
 
-        file_number = production4.save_to_file()
-        production3 = Production.read_from_file(file_number)
-        self.assertTrue(compare_prods(production4, production3))
+        for i in range(0, 5):
+            file_num = production4.save_to_file()
+            production3 = Production.read_from_file(file_num)
+            self.assertTrue(compare_prods(production4, production3))
 
-        file_number = production4.save_to_file()
-        production3 = Production.read_from_file(file_number)
-        self.assertTrue(compare_prods(production4, production3))
-
-        file_number = production4.save_to_file()
-        production3 = Production.read_from_file(file_number)
-        self.assertTrue(compare_prods(production4, production3))
-
-        file_number = production4.save_to_file()
-        production3 = Production.read_from_file(file_number)
-        self.assertTrue(compare_prods(production4, production3))
+        self.assertTrue(Production.read_from_file(file_num) is not None)
+        self.assertTrue(Production.read_from_file(file_num + 1) is None)
 
         production4.save_to_file(1)
         production3 = Production.read_from_file(1)
         self.assertTrue(compare_prods(production4, production3))
 
-        production4.save_to_file(0)
-        production3 = Production.read_from_file(0)
-        self.assertTrue(compare_prods(production4, production3))
+        production2.save_to_file(0)
+        production1 = Production.read_from_file(0)
+        self.assertTrue(compare_prods(production2, production1))
 
 
 if __name__ == '__main__':
