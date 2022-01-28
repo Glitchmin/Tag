@@ -1,3 +1,5 @@
+import pathlib
+
 from graph import *
 from copy import deepcopy
 from graph_history import *
@@ -43,7 +45,9 @@ def use_production(gh: GraphHistory):
 def restore_graph(gh: GraphHistory):
     gh.restore_graph()
     g = gh.get_current()
-    print(g)
+    g.print()
+    # TODO here graph should be painted
+# TODO add functions to modify productions
 
 
 if __name__ == "__main__":
@@ -60,4 +64,8 @@ if __name__ == "__main__":
         production.save_to_file()
 
     while True:
-        use_production(graph_history)
+        inp = input("p-apply production, r-restore graph")
+        if inp == 'p':
+            use_production(graph_history)
+        if inp == 'r':
+            restore_graph(graph_history)
