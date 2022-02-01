@@ -97,6 +97,6 @@ class Production:
         self.left_graph.print()
         print("RHS")
         self.right_graph.print()
-        print("transformacja osadzenia")
+        print("embedding transformation")
         for new_edge_def in self.new_edges_defs:
             new_edge_def.print()

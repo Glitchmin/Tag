@@ -76,7 +76,7 @@ def main():
         production.save_to_file()
 
     while True:
-        inp = input("p - apply production, r - restore graph, f - reload productions from files, e - edit production: ")
+        inp = input("p - apply production, r - restore graph, f - reload productions from files,\n e - edit production, pp - print productions, g - print graph: ")
         if inp == 'p':
             use_production(graph_history, productions)
         if inp == 'r':
@@ -87,6 +87,13 @@ def main():
         if inp == 'e':
             edit_production(productions)
             # TODO reprint productions
+        if inp == 'pp':
+            for i in range(len(productions)):
+                print("Production", i, ":")
+                productions[i].print()
+                print()
+        if inp == 'g':
+            graph_history.get_current().print()
 
 
 if __name__ == "__main__":

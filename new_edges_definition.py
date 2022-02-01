@@ -6,7 +6,7 @@ class NewEdgesDefinition:
     def __init__(self, is_outgoing: bool, label: str, lhs_index: int,
                  new_edges_params: List[Tuple[str, int, str, bool]]):
         """
-        Seating transformation description:
+        Embedding transformation description:
             Find all edges that matches (it can be more than 1) (if matches 0 we just ignore it):
                 is_outgoing (direction),
                 it's label is label
